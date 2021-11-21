@@ -5,5 +5,5 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 
 public interface LogRequestFilter {
 
-    ExchangeFilterFunction logRequest(LoggingProperties loggingProperties);
+    ExchangeFilterFunction logRequest();
 }

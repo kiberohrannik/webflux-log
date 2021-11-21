@@ -3,7 +3,8 @@ package com.kiberohrannik.webflux_addons.logging.filter;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.kiberohrannik.webflux_addons.base.BaseTest;
-import com.kiberohrannik.webflux_addons.logging.stub.TestRequestMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.creator.*;
+import com.kiberohrannik.webflux_addons.logging.stub.RequestMessageCreatorTestDecorator;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,6 +15,8 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -43,13 +46,25 @@ public class BaseLogRequestFilterComponentTest extends BaseTest {
 
 
     @ParameterizedTest
-    @MethodSource("getLoggingProperties")
+    @MethodSource({"getLoggingProperties", "getLoggingPropertiesWithReqId"})
     void logRequest_whenTrueInLoggingProperties_thenLog(LoggingProperties loggingProperties) {
         String requestBody = RandomString.make();
 
-        BaseLogRequestFilter logFilter = new BaseLogRequestFilter(new TestRequestMessageCreator(requestBody));
+
+        List<RequestDataMessageFormatter> formatters = new ArrayList<>();
+        formatters.add(new ReqIdMessageFormatter());
+        formatters.add(new HeaderMessageFormatter());
+        formatters.add(new CookieMessageFormatter());
+        formatters.add(new BodyMessageFormatter());
+
+        RequestMessageCreator messageCreator = new BaseRequestMessageCreator(loggingProperties, formatters);
+        RequestMessageCreatorTestDecorator testDecorator = new RequestMessageCreatorTestDecorator(messageCreator,
+                loggingProperties, requestBody);
+
+        LogRequestFilter logRequestFilter = LogRequestFilterFactory.defaultFilter(testDecorator);
+
         WebClient webClient = WebClient.builder()
-                .filter(logFilter.logRequest(loggingProperties))
+                .filter(logRequestFilter.logRequest())
                 .build();
 
         WireMock.stubFor(WireMock.post(PATH)
@@ -84,6 +99,16 @@ public class BaseLogRequestFilterComponentTest extends BaseTest {
                 Arguments.of(withHeadersProps),
                 Arguments.of(withCookiesProps),
                 Arguments.of(withBodyProps)
+        );
+    }
+
+    private static Stream<Arguments> getLoggingPropertiesWithReqId() {
+        LoggingProperties nullIdPrefix = LoggingProperties.builder().logRequestId(true).build();
+        LoggingProperties withIdPrefix = LoggingProperties.builder().logRequestId(true).requestIdPrefix("TSTS").build();
+
+        return Stream.of(
+                Arguments.of(nullIdPrefix),
+                Arguments.of(withIdPrefix)
         );
     }
 }

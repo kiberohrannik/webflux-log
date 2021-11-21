@@ -48,6 +48,6 @@ Thumbs.db
 *.mov
 *.wmv
 
-/src/main/java/com/kiberohrannik/webflux_addons/old
-/src/test/java/com/kiberohrannik/webflux_addons/temp
+src/main/java/com/kiberohrannik/webflux_addons/old/*
+src/test/java/com/kiberohrannik/webflux_addons/temp/*
 

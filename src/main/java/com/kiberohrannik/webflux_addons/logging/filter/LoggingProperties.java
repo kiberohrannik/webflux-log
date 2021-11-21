@@ -7,7 +7,10 @@ import lombok.Getter;
 @Builder
 public final class LoggingProperties {
 
-    private boolean logHeaders;
-    private boolean logCookies;
-    private boolean logBody;
+    private final boolean logHeaders;//sensitive
+    private final boolean logCookies; //sensitive
+    private final boolean logBody;
+
+    private final boolean logRequestId;
+    private final String requestIdPrefix;
 }

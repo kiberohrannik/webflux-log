@@ -10,26 +10,39 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestRequestMessageCreator extends RequestMessageCreator {
+public class RequestMessageCreatorTestDecorator implements RequestMessageCreator {
 
+    private final RequestMessageCreator requestMessageCreator;
+    private final LoggingProperties loggingProperties;
     private final String bodyInLogMessage;
 
-    public TestRequestMessageCreator() {
-        super();
+
+    public RequestMessageCreatorTestDecorator(RequestMessageCreator sourceMessageCreator,
+                                              LoggingProperties sourceLoggingProperties) {
+
+        this.requestMessageCreator = sourceMessageCreator;
+        this.loggingProperties = sourceLoggingProperties;
         this.bodyInLogMessage = null;
     }
 
-    public TestRequestMessageCreator(String bodyInLogMessage) {
-        super();
+    public RequestMessageCreatorTestDecorator(RequestMessageCreator sourceMessageCreator,
+                                              LoggingProperties sourceLoggingProperties,
+                                              String bodyInLogMessage) {
+
+        this.requestMessageCreator = sourceMessageCreator;
+        this.loggingProperties = sourceLoggingProperties;
         this.bodyInLogMessage = bodyInLogMessage;
     }
 
-
     @Override
-    public Mono<String> formatMessage(ClientRequest request, LoggingProperties loggingProperties) {
-        return super.formatMessage(request, loggingProperties)
+    public Mono<String> formatMessage(ClientRequest request) {
+        return requestMessageCreator.formatMessage(request)
                 .doOnNext(message -> {
                     assertWithHttpMethodAndUrl(message, request);
+
+                    if (loggingProperties.isLogRequestId()) {
+                        assertWithReqId(message, request, loggingProperties);
+                    }
 
                     if (loggingProperties.isLogHeaders()) {
                         assertWithHeaders(message, request);
@@ -50,6 +63,14 @@ public class TestRequestMessageCreator extends RequestMessageCreator {
                 () -> assertTrue(message.contains(request.method().name())),
                 () -> assertTrue(message.contains(request.url().toString()))
         );
+    }
+
+    private void assertWithReqId(String message, ClientRequest request, LoggingProperties loggingProperties) {
+        if (loggingProperties.getRequestIdPrefix() == null) {
+            assertTrue(message.contains(request.logPrefix()));
+        } else {
+            assertTrue(message.contains(loggingProperties.getRequestIdPrefix() + "_" + request.logPrefix()));
+        }
     }
 
     private void assertWithHeaders(String message, ClientRequest request) {
