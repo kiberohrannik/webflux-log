@@ -1,9 +1,11 @@
-package com.kiberohrannik.webflux_addons.logging.filter;
+package com.kiberohrannik.webflux_addons.logging.request.filter;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.kiberohrannik.webflux_addons.base.BaseTest;
-import com.kiberohrannik.webflux_addons.logging.creator.*;
+import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.request.message.*;
+import com.kiberohrannik.webflux_addons.logging.request.message.formatter.*;
 import com.kiberohrannik.webflux_addons.logging.stub.RequestMessageCreatorTestDecorator;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.AfterAll;

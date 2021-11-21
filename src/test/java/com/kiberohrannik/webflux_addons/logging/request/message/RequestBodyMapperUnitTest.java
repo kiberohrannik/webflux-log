@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.creator;
+package com.kiberohrannik.webflux_addons.logging.request.message;
 
 import com.kiberohrannik.webflux_addons.base.BaseTest;
 import net.bytebuddy.utility.RandomString;

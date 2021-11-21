@@ -1,6 +1,5 @@
-package com.kiberohrannik.webflux_addons.logging.filter;
+package com.kiberohrannik.webflux_addons.logging.request.filter;
 
-import com.kiberohrannik.webflux_addons.old.LoggingExchangeParams;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 
 public interface LogRequestFilter {

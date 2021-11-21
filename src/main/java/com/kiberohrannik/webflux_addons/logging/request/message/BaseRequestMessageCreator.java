@@ -1,6 +1,7 @@
-package com.kiberohrannik.webflux_addons.logging.creator;
+package com.kiberohrannik.webflux_addons.logging.request.message;
 
-import com.kiberohrannik.webflux_addons.logging.filter.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.request.message.formatter.RequestDataMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
@@ -23,8 +24,6 @@ public class BaseRequestMessageCreator implements RequestMessageCreator {
         for (RequestDataMessageFormatter formatter : messageFormatters) {
             logMessage = formatter.addData(request, loggingProperties, logMessage);
         }
-
-//        messageFormatters.forEach(formatter -> formatter.addData(request, loggingProperties, logMessage));
 
         return logMessage;
     }

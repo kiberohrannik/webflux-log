@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.filter;
+package com.kiberohrannik.webflux_addons.logging;
 
 import lombok.Builder;
 import lombok.Getter;

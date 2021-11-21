@@ -1,28 +1,28 @@
-package com.kiberohrannik.webflux_addons.logging.creator;
+package com.kiberohrannik.webflux_addons.logging.request.message.formatter;
 
-import com.kiberohrannik.webflux_addons.logging.filter.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
-public class CookieMessageFormatter implements RequestDataMessageFormatter {
+public class HeaderMessageFormatter implements RequestDataMessageFormatter {
 
     @Override
     public Mono<String> addData(ClientRequest request,
                                 LoggingProperties loggingProperties,
                                 Mono<String> sourceMessage) {
 
-        if (loggingProperties.isLogCookies()) {
-            return sourceMessage.map(source -> source.concat(extractCookies(request)));
+        if (loggingProperties.isLogHeaders()) {
+            return sourceMessage.map(source -> source.concat(extractHeaders(request)));
         }
 
         return sourceMessage;
     }
 
 
-    private String extractCookies(ClientRequest request) {
-        StringBuilder sb = new StringBuilder("\nCOOKIES: [ ");
+    private String extractHeaders(ClientRequest request) {
+        StringBuilder sb = new StringBuilder("\nHEADERS: [ ");
 
-        request.cookies()
+        request.headers()
                 .forEach((headerName, headerValues) -> headerValues
                         .forEach(value -> sb.append(headerName).append("=").append(value).append(" ")));
 
