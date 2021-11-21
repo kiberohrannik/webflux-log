@@ -4,7 +4,8 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.kiberohrannik.webflux_addons.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.request.message.*;
+import com.kiberohrannik.webflux_addons.logging.request.message.BaseRequestMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.request.message.formatter.*;
 import com.kiberohrannik.webflux_addons.logging.stub.RequestMessageCreatorTestDecorator;
 import net.bytebuddy.utility.RandomString;
@@ -52,7 +53,6 @@ public class BaseLogRequestFilterComponentTest extends BaseTest {
     void logRequest_whenTrueInLoggingProperties_thenLog(LoggingProperties loggingProperties) {
         String requestBody = RandomString.make();
 
-
         List<RequestDataMessageFormatter> formatters = new ArrayList<>();
         formatters.add(new ReqIdMessageFormatter());
         formatters.add(new HeaderMessageFormatter());
@@ -92,8 +92,10 @@ public class BaseLogRequestFilterComponentTest extends BaseTest {
 
     private static Stream<Arguments> getLoggingProperties() {
         LoggingProperties onlyUrlProps = LoggingProperties.builder().build();
-        LoggingProperties withHeadersProps = LoggingProperties.builder().logHeaders(true).build();
-        LoggingProperties withCookiesProps = LoggingProperties.builder().logCookies(true).build();
+
+        //FIXME fix test
+        LoggingProperties withHeadersProps = LoggingProperties.builder().logHeaders(true).maskedHeaders(new String[]{"Authorization"}).build();
+        LoggingProperties withCookiesProps = LoggingProperties.builder().logCookies(true).maskedCookies(new String[]{"Cookie-1"}).build();
         LoggingProperties withBodyProps = LoggingProperties.builder().logBody(true).build();
 
         return Stream.of(

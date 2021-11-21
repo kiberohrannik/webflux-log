@@ -2,11 +2,9 @@ package com.kiberohrannik.webflux_addons.temp;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-//import com.kiberohrannik.webflux_addons.logging.creator.RequestBodyExtractor;
-import com.kiberohrannik.webflux_addons.logging.creator.RequestBodyMapper;
-import com.kiberohrannik.webflux_addons.logging.creator.RequestMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.filter.BaseLogRequestFilter;
-import com.kiberohrannik.webflux_addons.logging.filter.LoggingProperties;
+//import com.kiberohrannik.webflux_addons.logging.request.creator.RequestBodyExtractor;
+import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilterFactory;
+import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.jupiter.api.AfterEach;
@@ -51,14 +49,15 @@ public class WebClientTest {
                 .withRequestBody(WireMock.containing(""))
                 .willReturn(WireMock.status(200)));
 
+        LoggingProperties loggingProperties = LoggingProperties.builder()
+                .logHeaders(true)
+                .logCookies(true)
+                .logBody(true)
+                .build();
+
         WebClient webClient = WebClient.builder()
                 .baseUrl("http://localhost:8080")
-//                .filter(new BaseLogRequestFilter(new RequestMessageCreator(new RequestBodyExtractor(new RequestBodyMapper())))
-//                        .logRequest(LoggingProperties.builder()
-//                                .logHeaders(true)
-//                                .logCookies(true)
-//                                .logBody(true)
-//                                .build()))
+                .filter(LogRequestFilterFactory.defaultFilter(loggingProperties).logRequest())
                 .build();
 
         System.out.println("\n\n");
