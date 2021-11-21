@@ -51,6 +51,7 @@ public class RequestMessageCreator {
 
     private Mono<StringBuilder> addBody(StringBuilder messageBuilder, ClientRequest request) {
         return bodyExtractor.extractBody(request)
+                .switchIfEmpty(Mono.just(""))
                 .map(bodyStr -> messageBuilder.append(" \nBODY: [ ").append(bodyStr).append(" ]"));
     }
 }

@@ -15,10 +15,12 @@ public class TestRequestMessageCreator extends RequestMessageCreator {
     private final String bodyInLogMessage;
 
     public TestRequestMessageCreator() {
+        super();
         this.bodyInLogMessage = null;
     }
 
     public TestRequestMessageCreator(String bodyInLogMessage) {
+        super();
         this.bodyInLogMessage = bodyInLogMessage;
     }
 

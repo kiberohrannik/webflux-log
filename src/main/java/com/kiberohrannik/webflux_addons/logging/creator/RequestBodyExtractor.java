@@ -1,7 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.creator;
 
-import lombok.extern.log4j.Log4j2;
-import org.springframework.core.ParameterizedTypeReference;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.client.reactive.ClientHttpRequest;
 import org.springframework.lang.NonNull;
 import org.springframework.web.reactive.function.BodyInserter;
@@ -10,8 +10,12 @@ import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 
-@Log4j2
-final class RequestBodyExtractor {
+public final class RequestBodyExtractor {
+
+    private static final Log log = LogFactory.getLog(RequestBodyExtractor.class);
+
+    private static final String BODY_VALUE_FIELD = "arg$1";
+    private static final String BODY_TYPE_FIELD = "arg$2";
 
     private final RequestBodyMapper bodyMapper = new RequestBodyMapper();
 
@@ -19,23 +23,16 @@ final class RequestBodyExtractor {
     public Mono<String> extractBody(@NonNull ClientRequest request) {
         BodyInserter<?, ? super ClientHttpRequest> inserter = request.body();
 
-        Object bodyValue = getInserterFieldValue(inserter, "arg$1");
+        Object bodyValue = getInserterFieldValue(inserter, BODY_VALUE_FIELD);
 
         if (bodyValue == null) {
+            log.debug("Empty body in request: " + request.url());
             return Mono.empty();
         }
 
-        Object bodyType = getInserterFieldValue(inserter, "arg$2");
+        Object bodyType = getInserterFieldValue(inserter, BODY_TYPE_FIELD);
 
-        if (bodyType == null) {
-            return bodyMapper.mapToString(bodyValue);
-        }
-
-        if (bodyType instanceof ParameterizedTypeReference) {
-            return bodyMapper.mapToString(bodyValue, (ParameterizedTypeReference<?>) bodyType);
-        }
-
-        return bodyMapper.mapToString(bodyValue, (Class<?>) bodyType);
+        return bodyMapper.mapToString(bodyValue, bodyType);
     }
 
 
@@ -57,7 +54,7 @@ final class RequestBodyExtractor {
 
         } catch (IllegalAccessException e) {
             inserterField.setAccessible(false);
-            log.error(e.getMessage());
+            log.error("Failed to extract request body: " + e.getMessage());
 
             return null;
         }
