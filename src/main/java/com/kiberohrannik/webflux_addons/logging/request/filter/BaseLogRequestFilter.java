@@ -1,14 +1,16 @@
 package com.kiberohrannik.webflux_addons.logging.request.filter;
 
+import com.kiberohrannik.webflux_addons.logging.request.message.RequestBodyExtractor;
 import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 
-@Slf4j  //TODO add ability to use any logger and configuration
 @RequiredArgsConstructor
 public class BaseLogRequestFilter implements LogRequestFilter {
 
+    private static final Log log = LogFactory.getLog(RequestBodyExtractor.class);
     private final RequestMessageCreator messageCreator;
 
 

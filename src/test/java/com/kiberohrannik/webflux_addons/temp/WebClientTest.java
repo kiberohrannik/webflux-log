@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 //import com.kiberohrannik.webflux_addons.logging.request.creator.RequestBodyExtractor;
 import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilterFactory;
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.response.filter.LogResponseFilterFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.jupiter.api.AfterEach;
@@ -58,6 +59,7 @@ public class WebClientTest {
         WebClient webClient = WebClient.builder()
                 .baseUrl("http://localhost:8080")
                 .filter(LogRequestFilterFactory.defaultFilter(loggingProperties).logRequest())
+                .filter(LogResponseFilterFactory.defaultFilter(loggingProperties).logResponse())
                 .build();
 
         System.out.println("\n\n");

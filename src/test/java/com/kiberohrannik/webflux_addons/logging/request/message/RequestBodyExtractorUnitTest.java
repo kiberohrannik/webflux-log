@@ -29,6 +29,7 @@ public class RequestBodyExtractorUnitTest extends BaseTest {
 
     private final ClientRequest.Builder reqBuilder = ClientRequest.create(HttpMethod.GET, URI.create("/someUri"));
 
+
     @Test
     void extractBody_whenNoBody_thenReturnEmpty() {
         Mono<String> bodyMono = bodyExtractor.extractBody(reqBuilder.build());
