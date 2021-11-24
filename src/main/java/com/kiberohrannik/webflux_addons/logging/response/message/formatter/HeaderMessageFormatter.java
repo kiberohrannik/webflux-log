@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.response.message.formatter;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
@@ -12,12 +13,14 @@ import static com.kiberohrannik.webflux_addons.logging.LoggingProperties.DEFAULT
 public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
 
     @Override
-    public Mono<String> addData(ClientResponse response,
-                                LoggingProperties loggingProperties,
-                                Mono<String> sourceMessage) {
+    public Mono<ResponseData> addData(LoggingProperties loggingProperties,
+                                      Mono<ResponseData> sourceMessage) {
 
         if (loggingProperties.isLogHeaders()) {
-            return sourceMessage.map(source -> source.concat(extractHeaders(response, loggingProperties)));
+            return sourceMessage.map(source -> {
+                String headersMessage = extractHeaders(source.getResponse(), loggingProperties);
+                return source.addToLogs(headersMessage);
+            });
         }
 
         return sourceMessage;

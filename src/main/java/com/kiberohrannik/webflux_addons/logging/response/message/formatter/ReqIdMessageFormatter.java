@@ -1,18 +1,21 @@
 package com.kiberohrannik.webflux_addons.logging.response.message.formatter;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
 public class ReqIdMessageFormatter implements ResponseDataMessageFormatter {
 
     @Override
-    public Mono<String> addData(ClientResponse response,
-                                LoggingProperties loggingProperties,
-                                Mono<String> sourceMessage) {
+    public Mono<ResponseData> addData(LoggingProperties loggingProperties,
+                                      Mono<ResponseData> sourceMessage) {
 
         if (loggingProperties.isLogRequestId()) {
-            return sourceMessage.map(source -> source.concat(extractReqId(response, loggingProperties)));
+            return sourceMessage.map(source -> {
+                String reqIdMessage = extractReqId(source.getResponse(), loggingProperties);
+                return source.addToLogs(reqIdMessage);
+            });
         }
 
         return sourceMessage;

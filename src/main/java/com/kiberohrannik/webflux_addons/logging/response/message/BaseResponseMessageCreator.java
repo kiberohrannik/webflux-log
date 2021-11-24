@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 public class BaseResponseMessageCreator implements ResponseMessageCreator {
@@ -17,29 +18,35 @@ public class BaseResponseMessageCreator implements ResponseMessageCreator {
 
 
     @Override
-    public Mono<String> formatMessage(ClientResponse response) {
-        String baseMessage = "RESPONSE: " + formatHttpStatusMessage(response.rawStatusCode());
+    public Mono<ResponseData> formatMessage(Long responseTimeMillis, ClientResponse response) {
+        String baseMessage = "RESPONSE:"
+                + formatResponseTimeMessage(responseTimeMillis)
+                + formatHttpStatusMessage(response.rawStatusCode());
 
-        //reqid (logPrefix)
-        //headers
-        //cookies
-        //body
-        Mono<String> logMessage = Mono.just(baseMessage);
-
+        Mono<ResponseData> logData = Mono.just(new ResponseData(response, baseMessage));
         for (ResponseDataMessageFormatter formatter : messageFormatters) {
-            logMessage = formatter.addData(response, loggingProperties, logMessage);
+            logData = formatter.addData(loggingProperties, logData);
         }
 
-        return logMessage;
+        return logData;
+    }
+
+
+    private String formatResponseTimeMessage(long responseTimeMillis) {
+        String timeStr = responseTimeMillis < 1000
+                ? responseTimeMillis + "ms"
+                : TimeUnit.MICROSECONDS.toSeconds(responseTimeMillis) + "s";
+
+        return " ELAPSED TIME: " + timeStr;
     }
 
     private String formatHttpStatusMessage(int rawStatusCode) {
-        String rawStatusCodeStr = String.valueOf(rawStatusCode);
+        String msg = " STATUS: " + rawStatusCode;
 
         HttpStatus httpStatus = HttpStatus.resolve(rawStatusCode);
         if (httpStatus != null) {
-            return rawStatusCodeStr.concat(" ").concat(httpStatus.getReasonPhrase());
+            msg += " " + httpStatus.getReasonPhrase();
         }
-        return rawStatusCodeStr;
+        return msg;
     }
 }

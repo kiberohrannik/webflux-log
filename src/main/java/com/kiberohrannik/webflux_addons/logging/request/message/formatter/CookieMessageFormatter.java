@@ -37,17 +37,17 @@ public class CookieMessageFormatter implements RequestDataMessageFormatter {
         return sb.append("]").toString();
     }
 
-    private MultiValueMap<String, String> setMask(MultiValueMap<String, String> cookies, String[] cookieNames) {
+    private MultiValueMap<String, String> setMask(MultiValueMap<String, String> cookies, String[] cookiesToMask) {
         MultiValueMap<String, String> cookiesToLog = new LinkedMultiValueMap<>(cookies);
-        for (String sensitiveHeaderName : cookieNames) {
-            cookiesToLog.put(sensitiveHeaderName, List.of(DEFAULT_MASK));
+        for (String sensitiveCookieName : cookiesToMask) {
+            cookiesToLog.put(sensitiveCookieName, List.of(DEFAULT_MASK));
         }
 
         return cookiesToLog;
     }
 
     private void extractAll(MultiValueMap<String, String> cookies, StringBuilder sb) {
-        cookies.forEach((headerName, headerValues) -> headerValues
-                .forEach(value -> sb.append(headerName).append("=").append(value).append(" ")));
+        cookies.forEach((cookieName, cookieValues) -> cookieValues
+                .forEach(value -> sb.append(cookieName).append("=").append(value).append(" ")));
     }
 }

@@ -2,9 +2,8 @@ package com.kiberohrannik.webflux_addons.temp;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-//import com.kiberohrannik.webflux_addons.logging.request.creator.RequestBodyExtractor;
-import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilterFactory;
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilterFactory;
 import com.kiberohrannik.webflux_addons.logging.response.filter.LogResponseFilterFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,12 +42,12 @@ public class WebClientTest {
 
     @Test
     void test() throws InterruptedException {
-//        WebClient.builder()
-//                .filters() //Consumer<List<ExchangeFilterFunction>> filtersConsumer
-
         WireMock.stubFor(WireMock.post("/some")
                 .withRequestBody(WireMock.containing(""))
-                .willReturn(WireMock.status(200)));
+                .willReturn(WireMock.status(200)
+                        .withHeader("SomeHeader", "vfavfda")
+                        .withHeader("Second-h", "12345")
+                        .withBody("Some response body olala")));
 
         LoggingProperties loggingProperties = LoggingProperties.builder()
                 .logHeaders(true)
@@ -59,12 +58,12 @@ public class WebClientTest {
         WebClient webClient = WebClient.builder()
                 .baseUrl("http://localhost:8080")
                 .filter(LogRequestFilterFactory.defaultFilter(loggingProperties).logRequest())
-                .filter(LogResponseFilterFactory.defaultFilter(loggingProperties).logResponse())
+                .filter(LogResponseFilterFactory.defaultFilter(loggingProperties))
                 .build();
 
         System.out.println("\n\n");
 
-        webClient.post()
+        String res = webClient.post()
                 .uri("/some")
 
                 .header("Accept", "application/json")
@@ -84,20 +83,19 @@ public class WebClientTest {
 //                .bodyValue("some body 1234567890")
 
                 //TODO
-//                .body(BodyInserters.fromPublisher(Mono.just("some body 1234567890 -- BodyInserters"), String.class))
-                .body(BodyInserters.fromPublisher(Flux.just("val1", "val2", "val3"), String.class))
+                .body(BodyInserters.fromPublisher(Mono.just("some body 1234567890 -- BodyInserters"), String.class))
+//                .body(BodyInserters.fromPublisher(Flux.just("val1", "val2", "val3"), String.class))
 
                 //TODO
 //                .body(producer)
 
                 .retrieve()
-                .toBodilessEntity()
-
-                .subscribe(System.out::println);
+                .bodyToMono(String.class)
+                .block();
 
         System.out.println("\n\n");
 
-        TimeUnit.SECONDS.sleep(2);
+        TimeUnit.SECONDS.sleep(5);
     }
 
 

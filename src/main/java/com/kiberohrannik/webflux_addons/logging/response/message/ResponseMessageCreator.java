@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface ResponseMessageCreator {
 
-    Mono<String> formatMessage(ClientResponse response);
+    Mono<ResponseData> formatMessage(Long responseTimeMillis, ClientResponse response);
 }
