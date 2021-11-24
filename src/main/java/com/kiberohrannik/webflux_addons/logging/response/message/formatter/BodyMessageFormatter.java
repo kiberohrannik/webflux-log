@@ -18,7 +18,7 @@ public class BodyMessageFormatter implements ResponseDataMessageFormatter {
         return sourceMessage;
     }
 
-    
+
     private Mono<ResponseData> addBody(ClientResponse response, String source) {
         return response.bodyToMono(String.class)
                 .map(body -> {
