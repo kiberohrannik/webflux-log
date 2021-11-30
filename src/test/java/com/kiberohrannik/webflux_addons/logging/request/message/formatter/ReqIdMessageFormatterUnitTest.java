@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
+import static com.kiberohrannik.webflux_addons.util.TestUtils.formatToLoggedReqId;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReqIdMessageFormatterUnitTest extends BaseTest {
@@ -53,11 +54,7 @@ public class ReqIdMessageFormatterUnitTest extends BaseTest {
         assertNotNull(withReqId);
         assertAll(
                 () -> assertTrue(withReqId.contains("REQ-ID:")),
-                () -> assertTrue(withReqId.contains(reqIdPrefix + "_" + formatToLoggedReqId(testRequest.logPrefix())))
+                () -> assertTrue(withReqId.contains(formatToLoggedReqId(testRequest.logPrefix(), reqIdPrefix)))
         );
-    }
-
-    private String formatToLoggedReqId(String logPrefix) {
-        return logPrefix.replaceAll("[\\[\\]\\s]", "");
     }
 }

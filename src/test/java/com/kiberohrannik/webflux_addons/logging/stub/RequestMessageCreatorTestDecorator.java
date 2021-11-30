@@ -1,12 +1,13 @@
 package com.kiberohrannik.webflux_addons.logging.stub;
 
-import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
+import static com.kiberohrannik.webflux_addons.util.TestUtils.formatToLoggedReqId;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -65,11 +66,11 @@ public class RequestMessageCreatorTestDecorator implements RequestMessageCreator
         );
     }
 
-    private void assertWithReqId(String message, ClientRequest request, LoggingProperties loggingProperties) {
-        if (loggingProperties.getRequestIdPrefix() == null) {
-            assertTrue(message.contains(request.logPrefix()));
+    private void assertWithReqId(String message, ClientRequest request, LoggingProperties loggingProps) {
+        if (loggingProps.getRequestIdPrefix() == null) {
+            assertTrue(message.contains(formatToLoggedReqId(request.logPrefix())));
         } else {
-            assertTrue(message.contains(loggingProperties.getRequestIdPrefix() + "_" + request.logPrefix()));
+            assertTrue(message.contains(formatToLoggedReqId(request.logPrefix(), loggingProps.getRequestIdPrefix())));
         }
     }
 
