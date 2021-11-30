@@ -20,7 +20,7 @@ public class ReqIdMessageFormatter implements RequestDataMessageFormatter {
 
 
     private String extractReqId(ClientRequest request, LoggingProperties loggingProperties) {
-        String reqId = request.logPrefix();
+        String reqId = request.logPrefix().substring(1, request.logPrefix().length() - 2);
 
         if (loggingProperties.getRequestIdPrefix() != null) {
             reqId = loggingProperties.getRequestIdPrefix().concat("_").concat(reqId);

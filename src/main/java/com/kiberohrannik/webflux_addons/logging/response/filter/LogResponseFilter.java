@@ -1,6 +1,6 @@
 package com.kiberohrannik.webflux_addons.logging.response.filter;
 
-import com.kiberohrannik.webflux_addons.logging.request.message.RequestBodyExtractor;
+import com.kiberohrannik.webflux_addons.logging.request.message.formatter.extractor.RequestBodyExtractor;
 import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
 import com.kiberohrannik.webflux_addons.logging.response.message.ResponseMessageCreator;
 import lombok.RequiredArgsConstructor;

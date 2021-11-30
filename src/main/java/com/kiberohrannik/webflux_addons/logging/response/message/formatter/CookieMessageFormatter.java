@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.response.message.formatter;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
 import org.springframework.http.ResponseCookie;
 import org.springframework.util.LinkedMultiValueMap;
@@ -10,7 +11,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static com.kiberohrannik.webflux_addons.logging.LoggingProperties.DEFAULT_MASK;
 
 public class CookieMessageFormatter implements ResponseDataMessageFormatter {
 
@@ -46,7 +46,7 @@ public class CookieMessageFormatter implements ResponseDataMessageFormatter {
 
         MultiValueMap<String, ResponseCookie> cookiesToLog = new LinkedMultiValueMap<>(cookies);
         for (String sensitiveCookieName : cookiesToMask) {
-            ResponseCookie maskedCookie = ResponseCookie.from(sensitiveCookieName, DEFAULT_MASK).build();
+            ResponseCookie maskedCookie = ResponseCookie.from(sensitiveCookieName, LoggingUtils.DEFAULT_MASK).build();
             cookiesToLog.put(sensitiveCookieName, List.of(maskedCookie));
         }
 

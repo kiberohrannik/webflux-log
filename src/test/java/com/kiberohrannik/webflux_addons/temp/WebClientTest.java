@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,11 +41,13 @@ public class WebClientTest {
     }
 
 
+    @Disabled
     @Test
     void test() throws InterruptedException {
         WireMock.stubFor(WireMock.post("/some")
                 .withRequestBody(WireMock.containing(""))
                 .willReturn(WireMock.status(200)
+                        .withFixedDelay(500)
                         .withHeader("SomeHeader", "vfavfda")
                         .withHeader("Second-h", "12345")
                         .withBody("Some response body olala")));
@@ -94,6 +97,7 @@ public class WebClientTest {
                 .block();
 
         System.out.println("\n\n");
+        System.out.println("res = " + res);
 
         TimeUnit.SECONDS.sleep(5);
     }

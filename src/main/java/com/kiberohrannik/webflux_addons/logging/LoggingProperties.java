@@ -7,8 +7,6 @@ import lombok.Getter;
 @Builder
 public final class LoggingProperties {
 
-    public static final String DEFAULT_MASK = "{masked}";
-
     private final boolean logHeaders;
     private final String[] maskedHeaders;
 

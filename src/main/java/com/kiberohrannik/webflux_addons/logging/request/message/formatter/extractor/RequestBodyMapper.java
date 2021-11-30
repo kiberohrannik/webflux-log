@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.request.message;
+package com.kiberohrannik.webflux_addons.logging.request.message.formatter.extractor;
 
 import org.reactivestreams.Publisher;
 import org.springframework.core.ParameterizedTypeReference;

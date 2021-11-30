@@ -1,13 +1,12 @@
 package com.kiberohrannik.webflux_addons.logging.request.message.formatter;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-
-import static com.kiberohrannik.webflux_addons.logging.LoggingProperties.DEFAULT_MASK;
 
 public class HeaderMessageFormatter implements RequestDataMessageFormatter {
 
@@ -39,8 +38,10 @@ public class HeaderMessageFormatter implements RequestDataMessageFormatter {
     private HttpHeaders setMask(ClientRequest request, String[] headerNames) {
         HttpHeaders headersToLog = HttpHeaders.writableHttpHeaders(request.headers());
 
-        for (String sensitiveHeaderName : headerNames) {
-            headersToLog.put(sensitiveHeaderName, List.of(DEFAULT_MASK));
+        for (String maskedHeaderName : headerNames) {
+            if (headersToLog.getFirst(maskedHeaderName) != null) {
+                headersToLog.put(maskedHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
+            }
         }
 
         return headersToLog;

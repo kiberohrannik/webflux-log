@@ -61,7 +61,7 @@ public class HeaderMessageFormatterUnitTest extends BaseTest {
     void addData_whenLogAndMaskHeaders_thenReturnWithMaskedHeaders() {
         LoggingProperties loggingProperties = LoggingProperties.builder()
                 .logHeaders(true)
-                .maskedHeaders(new String[]{HttpHeaders.AUTHORIZATION})
+                .maskedHeaders(new String[]{HttpHeaders.AUTHORIZATION, "AbsentHeader321"})
                 .build();
 
         String withHeaders = formatter.addData(testRequest, loggingProperties, Mono.just(sourceMessage)).block();
@@ -70,7 +70,8 @@ public class HeaderMessageFormatterUnitTest extends BaseTest {
                 () -> assertTrue(withHeaders.contains("HEADERS:")),
                 () -> assertTrue(withHeaders.contains("Accept=application/json")),
                 () -> assertTrue(withHeaders.contains("Content-Type=application/json")),
-                () -> assertTrue(withHeaders.contains("Authorization={masked}"))
+                () -> assertTrue(withHeaders.contains("Authorization={masked}")),
+                () -> assertFalse(withHeaders.contains("AbsentHeader321"))
         );
     }
 }

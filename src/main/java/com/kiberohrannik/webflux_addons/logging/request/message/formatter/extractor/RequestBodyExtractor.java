@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.request.message;
+package com.kiberohrannik.webflux_addons.logging.request.message.formatter.extractor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
