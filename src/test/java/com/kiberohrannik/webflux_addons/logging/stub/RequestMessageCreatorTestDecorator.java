@@ -5,26 +5,18 @@ import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCr
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import static com.kiberohrannik.webflux_addons.util.TestUtils.formatToLoggedReqId;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RequestMessageCreatorTestDecorator implements RequestMessageCreator {
 
     private final RequestMessageCreator requestMessageCreator;
     private final LoggingProperties loggingProperties;
-    private final String bodyInLogMessage;
+    private String bodyInLogMessage = "{no body}";
 
-
-    public RequestMessageCreatorTestDecorator(RequestMessageCreator sourceMessageCreator,
-                                              LoggingProperties sourceLoggingProperties) {
-
-        this.requestMessageCreator = sourceMessageCreator;
-        this.loggingProperties = sourceLoggingProperties;
-        this.bodyInLogMessage = null;
-    }
 
     public RequestMessageCreatorTestDecorator(RequestMessageCreator sourceMessageCreator,
                                               LoggingProperties sourceLoggingProperties,
@@ -32,7 +24,10 @@ public class RequestMessageCreatorTestDecorator implements RequestMessageCreator
 
         this.requestMessageCreator = sourceMessageCreator;
         this.loggingProperties = sourceLoggingProperties;
-        this.bodyInLogMessage = bodyInLogMessage;
+
+        if (bodyInLogMessage != null) {
+            this.bodyInLogMessage = bodyInLogMessage;
+        }
     }
 
     @Override
@@ -46,11 +41,11 @@ public class RequestMessageCreatorTestDecorator implements RequestMessageCreator
                     }
 
                     if (loggingProperties.isLogHeaders()) {
-                        assertWithHeaders(message, request);
+                        assertWithHeaders(loggingProperties.getMaskedHeaders(), message, request);
                     }
 
                     if (loggingProperties.isLogCookies()) {
-                        assertWithCookies(message, request);
+                        assertWithCookies(loggingProperties.getMaskedCookies(), message, request);
                     }
 
                     if (loggingProperties.isLogBody()) {
@@ -58,6 +53,7 @@ public class RequestMessageCreatorTestDecorator implements RequestMessageCreator
                     }
                 });
     }
+
 
     private void assertWithHttpMethodAndUrl(String message, ClientRequest request) {
         assertAll(
@@ -74,19 +70,35 @@ public class RequestMessageCreatorTestDecorator implements RequestMessageCreator
         }
     }
 
-    private void assertWithHeaders(String message, ClientRequest request) {
+    private void assertWithHeaders(String[] maskedHeaders, String message, ClientRequest request) {
         request.headers()
                 .forEach((name, values) -> {
                     assertTrue(message.contains(name));
-                    values.forEach(value -> assertTrue(message.contains(value)));
+
+                    values.forEach(value -> {
+                        if (maskedHeaders != null && Arrays.asList(maskedHeaders).contains(name)) {
+                            assertFalse(message.contains(value));
+                            assertTrue(message.contains(name + "={masked}"));
+                        } else {
+                            assertTrue(message.contains(value));
+                        }
+                    });
                 });
     }
 
-    private void assertWithCookies(String message, ClientRequest request) {
+    private void assertWithCookies(String[] maskedCookies, String message, ClientRequest request) {
         request.cookies()
                 .forEach((name, values) -> {
                     assertTrue(message.contains(name));
-                    values.forEach(value -> assertTrue(message.contains(value)));
+
+                    values.forEach(value -> {
+                        if (maskedCookies != null && Arrays.asList(maskedCookies).contains(name)) {
+                            assertFalse(message.contains(value));
+                            assertTrue(message.contains(name + "={masked}"));
+                        } else {
+                            assertTrue(message.contains(value));
+                        }
+                    });
                 });
     }
 

@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 @RequiredArgsConstructor
 public class BaseLogRequestFilter implements LogRequestFilter {
 
-    private static final Log log = LogFactory.getLog(RequestBodyExtractor.class);
+    private static final Log log = LogFactory.getLog(BaseLogRequestFilter.class);
     private final RequestMessageCreator messageCreator;
 
 

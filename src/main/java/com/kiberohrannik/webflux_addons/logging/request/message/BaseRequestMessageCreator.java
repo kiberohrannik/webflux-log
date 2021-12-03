@@ -25,7 +25,6 @@ public class BaseRequestMessageCreator implements RequestMessageCreator {
             logMessage = formatter.addData(request, loggingProperties, logMessage);
         }
 
-        return logMessage
-                .doOnNext(System.out::println);
+        return logMessage;
     }
 }

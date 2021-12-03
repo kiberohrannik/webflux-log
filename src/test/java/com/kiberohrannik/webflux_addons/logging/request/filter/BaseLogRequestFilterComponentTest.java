@@ -2,15 +2,12 @@ package com.kiberohrannik.webflux_addons.logging.request.filter;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.kiberohrannik.webflux_addons.base.BaseTest;
+import com.kiberohrannik.webflux_addons.base.BaseComponentTest;
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.request.message.BaseRequestMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.request.message.formatter.*;
-import com.kiberohrannik.webflux_addons.logging.stub.RequestMessageCreatorTestDecorator;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,21 +15,20 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 
 @SpringBootTest
 @SpringBootConfiguration
-public class BaseLogRequestFilterComponentTest extends BaseTest {
+public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
 
     private static final int SERVER_PORT = 8088;
     private static final String PATH = "/some/test/path";
     private static final String URL = "http://localhost:" + SERVER_PORT + PATH;
 
     private static WireMockServer mockServer;
+
 
     @BeforeAll
     static void startMockServer() {
@@ -48,28 +44,87 @@ public class BaseLogRequestFilterComponentTest extends BaseTest {
     }
 
 
-    //FIXME fix this test!!!! add headers, cookies,body check (including masked !!!! )
+    @ParameterizedTest
+    @MethodSource("getLogPropsWithReqId")
+    void logRequest_whenReqIdParamIsTrue_thenLog(LoggingProperties loggingProperties) {
+        WebClient webClient = createTestWebClient(loggingProperties, null);
+
+        WireMock.stubFor(WireMock.post(PATH)
+                .willReturn(WireMock.status(200)));
+
+        webClient.post()
+                .uri(URL)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
 
     @ParameterizedTest
-    @MethodSource({"getLoggingPropertiesWithReqId"})
-    void logRequest_whenTrueInLoggingProperties_thenLog(LoggingProperties loggingProperties) {
-        String requestBody = RandomString.make();
+    @MethodSource("getLogPropsWithHeadersAndCookies")
+    void logRequest_whenHeadersOrCookiesAreTrue_thenLog(LoggingProperties loggingProperties) {
+        WebClient webClient = createTestWebClient(loggingProperties, null);
 
-        List<RequestDataMessageFormatter> formatters = new ArrayList<>();
-        formatters.add(new ReqIdMessageFormatter());
-        formatters.add(new HeaderMessageFormatter());
-        formatters.add(new CookieMessageFormatter());
-        formatters.add(new BodyMessageFormatter());
+        WireMock.stubFor(WireMock.post(PATH)
+                .withHeader("Accept", equalTo("application/json"))
+                .withHeader("Authorization", equalTo("Bearer 1234"))
+                .withCookie("Cookie-1", equalTo("value1"))
+                .withCookie("Cookie-2", equalTo("value2"))
+                .willReturn(WireMock.status(200)));
 
-        RequestMessageCreator messageCreator = new BaseRequestMessageCreator(loggingProperties, formatters);
-        RequestMessageCreatorTestDecorator testDecorator = new RequestMessageCreatorTestDecorator(messageCreator,
-                loggingProperties, requestBody);
+        webClient.post()
+                .uri(URL)
+                .header("Accept", "application/json")
+                .header("Authorization", "Bearer 1234")
+                .cookie("Cookie-1", "value1")
+                .cookie("Cookie-2", "value2")
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
 
-        LogRequestFilter logRequestFilter = LogRequestFilterFactory.defaultFilter(testDecorator);
+    @Test
+    void logRequest_whenBodyParamIsTrueAndNoBody_thenLogEmpty() {
+        LoggingProperties properties = LoggingProperties.builder().logBody(true).build();
+        WebClient webClient = createTestWebClient(properties, null);
 
-        WebClient webClient = WebClient.builder()
-                .filter(logRequestFilter.logRequest())
-                .build();
+        WireMock.stubFor(WireMock.get(PATH)
+                .willReturn(WireMock.status(200)));
+
+        webClient.get()
+                .uri(URL)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
+
+    @Test
+    void logRequest_whenBodyParamIsTrue_thenLog() {
+        LoggingProperties properties = LoggingProperties.builder().logBody(true).build();
+        String requestBody = RandomString.make(40);
+        WebClient webClient = createTestWebClient(properties, requestBody);
+
+        WireMock.stubFor(WireMock.post(PATH)
+                .withRequestBody(equalTo(requestBody))
+                .willReturn(WireMock.status(200)));
+
+        webClient.post()
+                .uri(URL)
+                .bodyValue(requestBody)
+                .retrieve()
+                .toBodilessEntity()
+                .block();
+    }
+
+    @Test
+    void logRequest_whenAllParamsAreTrue_thenLog() {
+        LoggingProperties properties = LoggingProperties.builder()
+                .logRequestId(true).requestIdPrefix("TEST-PREF")
+                .logHeaders(true).maskedHeaders(new String[]{"Authorization"})
+                .logCookies(true).maskedCookies(new String[]{"Cookie-1"})
+                .logBody(true).build();
+
+        String requestBody = RandomString.make(40);
+        WebClient webClient = createTestWebClient(properties, requestBody);
 
         WireMock.stubFor(WireMock.post(PATH)
                 .withHeader("Accept", equalTo("application/json"))
@@ -92,29 +147,26 @@ public class BaseLogRequestFilterComponentTest extends BaseTest {
     }
 
 
-    private static Stream<Arguments> getLoggingProperties() {
-        LoggingProperties onlyUrlProps = LoggingProperties.builder().build();
-
-        //FIXME fix test
-        LoggingProperties withHeadersProps = LoggingProperties.builder().logHeaders(true).maskedHeaders(new String[]{"Authorization"}).build();
-        LoggingProperties withCookiesProps = LoggingProperties.builder().logCookies(true).maskedCookies(new String[]{"Cookie-1"}).build();
-        LoggingProperties withBodyProps = LoggingProperties.builder().logBody(true).build();
-
-        return Stream.of(
-                Arguments.of(onlyUrlProps),
-                Arguments.of(withHeadersProps),
-                Arguments.of(withCookiesProps),
-                Arguments.of(withBodyProps)
-        );
-    }
-
-    private static Stream<Arguments> getLoggingPropertiesWithReqId() {
+    private static Stream<Arguments> getLogPropsWithReqId() {
         LoggingProperties nullIdPrefix = LoggingProperties.builder().logRequestId(true).build();
         LoggingProperties withIdPrefix = LoggingProperties.builder().logRequestId(true).requestIdPrefix("TSTS").build();
 
         return Stream.of(
                 Arguments.of(nullIdPrefix),
                 Arguments.of(withIdPrefix)
+        );
+    }
+
+    private static Stream<Arguments> getLogPropsWithHeadersAndCookies() {
+        LoggingProperties noMasked = LoggingProperties.builder().logHeaders(true).logCookies(true).build();
+        LoggingProperties withMasked = LoggingProperties.builder()
+                .logHeaders(true).maskedHeaders(new String[]{"Authorization"})
+                .logCookies(true).maskedCookies(new String[]{"Cookie-2"})
+                .build();
+
+        return Stream.of(
+                Arguments.of(noMasked),
+                Arguments.of(withMasked)
         );
     }
 }

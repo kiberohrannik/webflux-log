@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class LogResponseFilter implements ExchangeFilterFunction {
 
-    private static final Log log = LogFactory.getLog(RequestBodyExtractor.class);
+    private static final Log log = LogFactory.getLog(LogResponseFilter.class);
     private final ResponseMessageCreator messageCreator;
 
 

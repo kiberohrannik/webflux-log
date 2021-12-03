@@ -98,8 +98,6 @@ public class WebClientTest {
 
         System.out.println("\n\n");
         System.out.println("res = " + res);
-
-        TimeUnit.SECONDS.sleep(5);
     }
 
 
