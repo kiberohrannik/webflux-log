@@ -61,7 +61,7 @@ public class HeaderMessageFormatterUnitTest extends BaseTest {
     void addData_whenLogAndMaskHeaders_thenReturnWithMaskedHeaders() {
         LoggingProperties loggingProperties = LoggingProperties.builder()
                 .logHeaders(true)
-                .maskedHeaders(new String[]{HttpHeaders.AUTHORIZATION, "AbsentHeader321"})
+                .maskedHeaders(HttpHeaders.AUTHORIZATION, "AbsentHeader321")
                 .build();
 
         String withHeaders = formatter.addData(testRequest, loggingProperties, Mono.just(sourceMessage)).block();

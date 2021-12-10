@@ -119,8 +119,8 @@ public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
     void logRequest_whenAllParamsAreTrue_thenLog() {
         LoggingProperties properties = LoggingProperties.builder()
                 .logRequestId(true).requestIdPrefix("TEST-PREF")
-                .logHeaders(true).maskedHeaders(new String[]{"Authorization"})
-                .logCookies(true).maskedCookies(new String[]{"Cookie-1"})
+                .logHeaders(true).maskedHeaders("Authorization")
+                .logCookies(true).maskedCookies("Cookie-1")
                 .logBody(true).build();
 
         String requestBody = RandomString.make(40);
@@ -160,8 +160,8 @@ public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
     private static Stream<Arguments> getLogPropsWithHeadersAndCookies() {
         LoggingProperties noMasked = LoggingProperties.builder().logHeaders(true).logCookies(true).build();
         LoggingProperties withMasked = LoggingProperties.builder()
-                .logHeaders(true).maskedHeaders(new String[]{"Authorization"})
-                .logCookies(true).maskedCookies(new String[]{"Cookie-2"})
+                .logHeaders(true).maskedHeaders("Authorization")
+                .logCookies(true).maskedCookies("Cookie-2")
                 .build();
 
         return Stream.of(

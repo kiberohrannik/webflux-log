@@ -54,7 +54,7 @@ public class CookieMessageFormatterUnitTest extends BaseTest {
     void addData_whenLogAndMaskCookies_thenReturnWithMaskedCookies() {
         LoggingProperties loggingProperties = LoggingProperties.builder()
                 .logCookies(true)
-                .maskedCookies(new String[]{"Session", "AbsentCookie321"})
+                .maskedCookies("Session", "AbsentCookie321")
                 .build();
 
         String withCookies = formatter.addData(testRequest, loggingProperties, Mono.just(sourceMessage)).block();
