@@ -40,9 +40,9 @@ public class CookieMessageFormatter implements RequestDataMessageFormatter {
     private MultiValueMap<String, String> setMask(MultiValueMap<String, String> cookies, String[] cookiesToMask) {
         MultiValueMap<String, String> cookiesToLog = new LinkedMultiValueMap<>(cookies);
 
-        for (String sensitiveCookieName : cookiesToMask) {
-            if (cookiesToLog.getFirst(sensitiveCookieName) != null) {
-                cookiesToLog.put(sensitiveCookieName, List.of(LoggingUtils.DEFAULT_MASK));
+        for (String maskedCookieName : cookiesToMask) {
+            if (cookiesToLog.getFirst(maskedCookieName) != null) {
+                cookiesToLog.put(maskedCookieName, List.of(LoggingUtils.DEFAULT_MASK));
             }
         }
 

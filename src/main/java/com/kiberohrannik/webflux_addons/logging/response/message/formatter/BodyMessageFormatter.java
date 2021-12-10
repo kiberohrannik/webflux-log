@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.response.message.formatter;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
@@ -25,7 +26,8 @@ public class BodyMessageFormatter implements ResponseDataMessageFormatter {
                     ClientResponse cloned = response.mutate().body(body).build();
                     return new ResponseData(cloned, formatMessage(body, source));
                 })
-                .switchIfEmpty(Mono.just(new ResponseData(response, formatMessage("", source))));
+                .switchIfEmpty(
+                        Mono.just(new ResponseData(response, formatMessage(LoggingUtils.NO_BODY_MESSAGE, source))));
     }
 
 

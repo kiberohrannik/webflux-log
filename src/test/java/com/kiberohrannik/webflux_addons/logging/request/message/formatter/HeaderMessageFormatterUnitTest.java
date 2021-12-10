@@ -27,12 +27,6 @@ public class HeaderMessageFormatterUnitTest extends BaseTest {
     private final String sourceMessage = RandomString.make();
 
 
-    //TODO tests on ReqId, Cookies, Body formatters
-
-    //TODO add logging of request duration (time exchange)
-
-    //TODO remove duplication in tests (ClientRequest.Builder reqBuilder, etc)
-
     @Test
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
         LoggingProperties loggingProperties = LoggingProperties.builder().logHeaders(false).build();

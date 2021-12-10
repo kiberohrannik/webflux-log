@@ -3,7 +3,8 @@ package com.kiberohrannik.webflux_addons.logging.response.message.formatter;
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
-import org.springframework.http.HttpHeaders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
@@ -39,17 +40,18 @@ public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
         return sb.append("]").toString();
     }
 
-    private HttpHeaders setMask(ClientResponse response, String[] headerNames) {
-        HttpHeaders headersToLog = HttpHeaders.writableHttpHeaders(response.headers().asHttpHeaders());
+    private MultiValueMap<String, String> setMask(ClientResponse response, String[] headerNames) {
+        MultiValueMap<String, String> headersToLog = new LinkedMultiValueMap<>(response.headers().asHttpHeaders());
 
-        for (String sensitiveHeaderName : headerNames) {
-            headersToLog.put(sensitiveHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
+        for (String maskedHeaderName : headerNames) {
+            if (headersToLog.getFirst(maskedHeaderName) != null) {
+                headersToLog.put(maskedHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
+            }
         }
-
         return headersToLog;
     }
 
-    private void extractAll(HttpHeaders headers, StringBuilder sb) {
+    private void extractAll(MultiValueMap<String, String> headers, StringBuilder sb) {
         headers.forEach((headerName, headerValues) -> headerValues
                 .forEach(value -> sb.append(headerName).append("=").append(value).append(" ")));
     }

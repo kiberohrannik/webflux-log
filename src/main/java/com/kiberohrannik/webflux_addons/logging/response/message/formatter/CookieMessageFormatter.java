@@ -45,9 +45,11 @@ public class CookieMessageFormatter implements ResponseDataMessageFormatter {
                                                           String[] cookiesToMask) {
 
         MultiValueMap<String, ResponseCookie> cookiesToLog = new LinkedMultiValueMap<>(cookies);
-        for (String sensitiveCookieName : cookiesToMask) {
-            ResponseCookie maskedCookie = ResponseCookie.from(sensitiveCookieName, LoggingUtils.DEFAULT_MASK).build();
-            cookiesToLog.put(sensitiveCookieName, List.of(maskedCookie));
+        for (String maskedCookieName : cookiesToMask) {
+            if (cookiesToLog.getFirst(maskedCookieName) != null) {
+                ResponseCookie maskedCookie = ResponseCookie.from(maskedCookieName, LoggingUtils.DEFAULT_MASK).build();
+                cookiesToLog.put(maskedCookieName, List.of(maskedCookie));
+            }
         }
 
         return cookiesToLog;
