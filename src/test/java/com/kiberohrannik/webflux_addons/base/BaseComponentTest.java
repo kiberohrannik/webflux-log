@@ -1,7 +1,6 @@
 package com.kiberohrannik.webflux_addons.base;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilter;
 import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilterFactory;
 import com.kiberohrannik.webflux_addons.logging.request.message.BaseRequestMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
@@ -43,10 +42,10 @@ public abstract class BaseComponentTest extends BaseTest {
         RequestMessageCreatorTestDecorator testDecorator = new RequestMessageCreatorTestDecorator(
                 msgCreator, logProperties, requestBody);
 
-        LogRequestFilter logRequestFilter = LogRequestFilterFactory.defaultFilter(testDecorator);
+        ExchangeFilterFunction logRequestFilter = LogRequestFilterFactory.defaultFilter(testDecorator);
 
         return WebClient.builder()
-                .filter(logRequestFilter.logRequest())
+                .filter(logRequestFilter)
                 .build();
     }
 

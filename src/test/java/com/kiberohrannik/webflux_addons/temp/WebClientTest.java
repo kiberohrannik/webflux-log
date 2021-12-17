@@ -7,10 +7,7 @@ import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilterF
 import com.kiberohrannik.webflux_addons.logging.response.filter.LogResponseFilterFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -60,7 +57,7 @@ public class WebClientTest {
 
         WebClient webClient = WebClient.builder()
                 .baseUrl("http://localhost:8080")
-                .filter(LogRequestFilterFactory.defaultFilter(loggingProperties).logRequest())
+                .filter(LogRequestFilterFactory.defaultFilter(loggingProperties))
                 .filter(LogResponseFilterFactory.defaultFilter(loggingProperties))
                 .build();
 

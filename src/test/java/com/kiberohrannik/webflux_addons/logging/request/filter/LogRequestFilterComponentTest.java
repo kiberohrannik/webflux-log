@@ -21,7 +21,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 
 @SpringBootTest
 @SpringBootConfiguration
-public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
+public class LogRequestFilterComponentTest extends BaseComponentTest {
 
     private static final int SERVER_PORT = 8088;
     private static final String PATH = "/some/test/path";
