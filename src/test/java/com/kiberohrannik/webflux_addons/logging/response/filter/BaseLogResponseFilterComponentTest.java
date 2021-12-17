@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.request.filter;
+package com.kiberohrannik.webflux_addons.logging.response.filter;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -13,15 +13,17 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 
 @SpringBootTest
 @SpringBootConfiguration
-public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
+public class BaseLogResponseFilterComponentTest extends BaseComponentTest {
 
     private static final int SERVER_PORT = 8088;
     private static final String PATH = "/some/test/path";
@@ -46,11 +48,12 @@ public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
 
     @ParameterizedTest
     @MethodSource("getLogPropsWithReqId")
-    void logRequest_whenReqIdParamIsTrue_thenLog(LoggingProperties loggingProperties) {
-        WebClient webClient = createTestRequestLogWebClient(loggingProperties, null);
+    void logResponse_whenReqIdParamIsTrue_thenLog(LoggingProperties loggingProperties) {
+        WebClient webClient = createTestResponseLogWebClient(loggingProperties, null, 65);
 
         WireMock.stubFor(WireMock.post(PATH)
-                .willReturn(WireMock.status(200)));
+                .willReturn(WireMock.status(200)
+                        .withFixedDelay(65)));
 
         webClient.post()
                 .uri(URL)
@@ -61,29 +64,40 @@ public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
 
     @ParameterizedTest
     @MethodSource("getLogPropsWithHeadersAndCookies")
-    void logRequest_whenHeadersOrCookiesAreTrue_thenLog(LoggingProperties loggingProperties) {
-        WebClient webClient = createTestRequestLogWebClient(loggingProperties, null);
+    void logResponse_whenHeadersOrCookiesAreTrue_thenLog(LoggingProperties loggingProperties) {
+        WebClient webClient = createTestResponseLogWebClient(loggingProperties, null, 100);
+
+        ResponseCookie responseCookie0 = ResponseCookie.from("Cookie-1", "value1")
+                .maxAge(Duration.ofSeconds(1000))
+                .domain("some.domain")
+                .httpOnly(true)
+                .build();
+
+        ResponseCookie responseCookie1 = ResponseCookie.from("Cookie-2", "value2")
+                .secure(true)
+                .domain("other.domain")
+                .httpOnly(false)
+                .build();
 
         WireMock.stubFor(WireMock.post(PATH)
-                .withHeader("Accept", equalTo("application/json"))
-                .withHeader("Authorization", equalTo("Bearer 1234"))
-                .withCookie("Cookie-1", equalTo("value1"))
-                .withCookie("Cookie-2", equalTo("value2"))
-                .willReturn(WireMock.status(200)));
+                .willReturn(WireMock.status(200)
+                        .withFixedDelay(100)
+                        .withHeader("Accept", "application/json")
+                        .withHeader("Authorization", "Bearer 1234")
+                        .withHeader("Set-Cookie2", responseCookie0.toString())
+                        .withHeader("Set-Cookie", responseCookie0.toString())
+                        .withHeader("Set-Cookie", responseCookie1.toString())
+                ));
 
         webClient.post()
                 .uri(URL)
-                .header("Accept", "application/json")
-                .header("Authorization", "Bearer 1234")
-                .cookie("Cookie-1", "value1")
-                .cookie("Cookie-2", "value2")
                 .retrieve()
                 .toBodilessEntity()
                 .block();
     }
 
     @Test
-    void logRequest_whenBodyParamIsTrueAndNoBody_thenLogEmpty() {
+    void logResponse_whenBodyParamIsTrueAndNoBody_thenLogEmpty() {
         LoggingProperties properties = LoggingProperties.builder().logBody(true).build();
         WebClient webClient = createTestRequestLogWebClient(properties, null);
 
@@ -98,7 +112,7 @@ public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
     }
 
     @Test
-    void logRequest_whenBodyParamIsTrue_thenLog() {
+    void logResponse_whenBodyParamIsTrue_thenLog() {
         LoggingProperties properties = LoggingProperties.builder().logBody(true).build();
         String requestBody = RandomString.make(40);
         WebClient webClient = createTestRequestLogWebClient(properties, requestBody);
@@ -116,7 +130,7 @@ public class BaseLogRequestFilterComponentTest extends BaseComponentTest {
     }
 
     @Test
-    void logRequest_whenAllParamsAreTrue_thenLog() {
+    void logResponse_whenAllParamsAreTrue_thenLog() {
         LoggingProperties properties = LoggingProperties.builder()
                 .logRequestId(true).requestIdPrefix("TEST-PREF")
                 .logHeaders(true).maskedHeaders("Authorization")

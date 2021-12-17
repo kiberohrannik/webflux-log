@@ -20,7 +20,7 @@ public class CookieMessageFormatter implements ResponseDataMessageFormatter {
 
         if (loggingProperties.isLogCookies()) {
             return sourceMessage.map(source -> {
-                String cookiesMessage = extractCookies(source.getResponse(), loggingProperties);
+                String cookiesMessage = formatCookieMessage(source.getResponse(), loggingProperties);
                 return source.addToLogs(cookiesMessage);
             });
         }
@@ -29,8 +29,8 @@ public class CookieMessageFormatter implements ResponseDataMessageFormatter {
     }
 
 
-    private String extractCookies(ClientResponse response, LoggingProperties props) {
-        StringBuilder sb = new StringBuilder("\nCOOKIES: [ ");
+    private String formatCookieMessage(ClientResponse response, LoggingProperties props) {
+        StringBuilder sb = new StringBuilder("\nCOOKIES (Set-Cookie): [ ");
 
         if (props.getMaskedCookies() == null) {
             extractAll(response.cookies(), sb);
@@ -57,6 +57,6 @@ public class CookieMessageFormatter implements ResponseDataMessageFormatter {
 
     private void extractAll(MultiValueMap<String, ResponseCookie> cookies, StringBuilder sb) {
         cookies.forEach((cookieName, cookieValues) -> cookieValues
-                .forEach(value -> sb.append(cookieName).append("=").append(value.getValue()).append(" ")));
+                .forEach(value -> sb.append(" [").append(value).append("]").append(" ")));
     }
 }

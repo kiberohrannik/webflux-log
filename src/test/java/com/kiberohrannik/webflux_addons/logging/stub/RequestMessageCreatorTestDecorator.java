@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.stub;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
@@ -15,7 +16,7 @@ public class RequestMessageCreatorTestDecorator implements RequestMessageCreator
 
     private final RequestMessageCreator requestMessageCreator;
     private final LoggingProperties loggingProperties;
-    private String bodyInLogMessage = "{no body}";
+    private String bodyInLogMessage = LoggingUtils.NO_BODY_MESSAGE;
 
 
     public RequestMessageCreatorTestDecorator(RequestMessageCreator sourceMessageCreator,

@@ -3,6 +3,7 @@ package com.kiberohrannik.webflux_addons.logging.response.message.formatter;
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -19,7 +20,7 @@ public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
 
         if (loggingProperties.isLogHeaders()) {
             return sourceMessage.map(source -> {
-                String headersMessage = extractHeaders(source.getResponse(), loggingProperties);
+                String headersMessage = formatHeaderMessage(source.getResponse(), loggingProperties);
                 return source.addToLogs(headersMessage);
             });
         }
@@ -28,27 +29,35 @@ public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
     }
 
 
-    private String extractHeaders(ClientResponse response, LoggingProperties props) {
+    private String formatHeaderMessage(ClientResponse response, LoggingProperties props) {
         StringBuilder sb = new StringBuilder("\nHEADERS: [ ");
 
+        MultiValueMap<String, String> headersToLog = ignoreCookies(response.headers());
+
         if (props.getMaskedHeaders() == null) {
-            extractAll(response.headers().asHttpHeaders(), sb);
+            extractAll(headersToLog, sb);
         } else {
-            extractAll(setMask(response, props.getMaskedHeaders()), sb);
+            extractAll(setMask(headersToLog, props), sb);
         }
 
         return sb.append("]").toString();
     }
 
-    private MultiValueMap<String, String> setMask(ClientResponse response, String[] headerNames) {
-        MultiValueMap<String, String> headersToLog = new LinkedMultiValueMap<>(response.headers().asHttpHeaders());
+    private MultiValueMap<String, String> ignoreCookies(ClientResponse.Headers sourceHeaders) {
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>(sourceHeaders.asHttpHeaders());
+        headers.remove(HttpHeaders.SET_COOKIE);
 
-        for (String maskedHeaderName : headerNames) {
-            if (headersToLog.getFirst(maskedHeaderName) != null) {
-                headersToLog.put(maskedHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
+        return headers;
+    }
+
+    private MultiValueMap<String, String> setMask(MultiValueMap<String, String> headers, LoggingProperties props) {
+        for (String maskedHeaderName : props.getMaskedHeaders()) {
+            if (headers.getFirst(maskedHeaderName) != null) {
+                headers.put(maskedHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
             }
         }
-        return headersToLog;
+
+        return headers;
     }
 
     private void extractAll(MultiValueMap<String, String> headers, StringBuilder sb) {
