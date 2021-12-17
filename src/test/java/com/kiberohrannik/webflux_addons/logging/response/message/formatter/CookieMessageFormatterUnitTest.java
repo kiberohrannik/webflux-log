@@ -45,7 +45,7 @@ public class CookieMessageFormatterUnitTest extends BaseTest {
 
         String actualLogMessage = withCookies.getLogMessage();
         assertAll(
-                () -> assertTrue(actualLogMessage.contains("COOKIES:")),
+                () -> assertTrue(actualLogMessage.contains("COOKIES (Set-Cookie):")),
                 () -> assertTrue(actualLogMessage.contains("Cookie-1=some-text-one")),
                 () -> assertTrue(actualLogMessage.contains("Cookie-1=some-text-two")),
                 () -> assertTrue(actualLogMessage.contains("Some2=any-contentSecond")),
@@ -65,7 +65,7 @@ public class CookieMessageFormatterUnitTest extends BaseTest {
 
         String actualLogMessage = withCookies.getLogMessage();
         assertAll(
-                () -> assertTrue(actualLogMessage.contains("COOKIES:")),
+                () -> assertTrue(actualLogMessage.contains("COOKIES (Set-Cookie):")),
                 () -> assertTrue(actualLogMessage.contains("Some2=any-contentSecond")),
                 () -> assertTrue(actualLogMessage.contains("Session={masked}")),
                 () -> assertFalse(actualLogMessage.contains("AbsentCookie321"))
