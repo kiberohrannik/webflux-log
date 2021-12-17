@@ -49,7 +49,7 @@ public class BaseLogResponseFilterComponentTest extends BaseComponentTest {
     @ParameterizedTest
     @MethodSource("getLogPropsWithReqId")
     void logResponse_whenReqIdParamIsTrue_thenLog(LoggingProperties loggingProperties) {
-        WebClient webClient = createTestResponseLogWebClient(loggingProperties, null, 65);
+        WebClient webClient = createTestResponseLogWebClient(loggingProperties, null);
 
         WireMock.stubFor(WireMock.post(PATH)
                 .willReturn(WireMock.status(200)
@@ -65,7 +65,7 @@ public class BaseLogResponseFilterComponentTest extends BaseComponentTest {
     @ParameterizedTest
     @MethodSource("getLogPropsWithHeadersAndCookies")
     void logResponse_whenHeadersOrCookiesAreTrue_thenLog(LoggingProperties loggingProperties) {
-        WebClient webClient = createTestResponseLogWebClient(loggingProperties, null, 100);
+        WebClient webClient = createTestResponseLogWebClient(loggingProperties, null);
 
         ResponseCookie responseCookie0 = ResponseCookie.from("Cookie-1", "value1")
                 .maxAge(Duration.ofSeconds(1000))

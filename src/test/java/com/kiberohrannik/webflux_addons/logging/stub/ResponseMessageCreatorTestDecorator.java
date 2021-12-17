@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static com.kiberohrannik.webflux_addons.util.TestUtils.formatToLoggedReqId;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResponseMessageCreatorTestDecorator implements ResponseMessageCreator {
 
@@ -19,18 +20,14 @@ public class ResponseMessageCreatorTestDecorator implements ResponseMessageCreat
     private final LoggingProperties loggingProperties;
 
     private String bodyInLogMessage = LoggingUtils.NO_BODY_MESSAGE;
-    private final long expectedResponseTimeMillis;
-    private final long responseTimeDelta = 400;
 
 
     public ResponseMessageCreatorTestDecorator(ResponseMessageCreator sourceMessageCreator,
                                                LoggingProperties sourceLoggingProperties,
-                                               String bodyInLogMessage,
-                                               long expectedResponseTimeMillis) {
+                                               String bodyInLogMessage) {
 
         this.responseMessageCreator = sourceMessageCreator;
         this.loggingProperties = sourceLoggingProperties;
-        this.expectedResponseTimeMillis = expectedResponseTimeMillis;
 
         if (bodyInLogMessage != null) {
             this.bodyInLogMessage = bodyInLogMessage;
@@ -41,7 +38,7 @@ public class ResponseMessageCreatorTestDecorator implements ResponseMessageCreat
     public Mono<ResponseData> formatMessage(Long responseTimeMillis, ClientResponse response) {
         return responseMessageCreator.formatMessage(responseTimeMillis, response)
                 .doOnNext(resData -> {
-                    assertWithExchangeTime(responseTimeMillis, resData.getLogMessage(), response);
+                    assertTrue(resData.getLogMessage().contains(String.valueOf(responseTimeMillis)));
 
                     if (loggingProperties.isLogRequestId()) {
                         assertWithReqId(resData.getLogMessage(), response, loggingProperties);
@@ -61,20 +58,6 @@ public class ResponseMessageCreatorTestDecorator implements ResponseMessageCreat
                 });
     }
 
-
-    private void assertWithExchangeTime(Long responseTimeMillis, String message, ClientResponse response) {
-        String timeInMessage = message.replaceAll(".*ELAPSED TIME: ", "")
-                .replaceAll("\\s.*", "")
-                .replaceAll("\\D", "");
-
-        long elapsedTimeInLog = Long.parseLong(timeInMessage);
-
-        assertAll(
-                () -> assertTrue(message.contains(String.valueOf(responseTimeMillis))),
-                () -> assertTrue(elapsedTimeInLog >= expectedResponseTimeMillis),
-                () -> assertTrue(elapsedTimeInLog <= expectedResponseTimeMillis + responseTimeDelta)
-        );
-    }
 
     private void assertWithReqId(String message, ClientResponse response, LoggingProperties loggingProps) {
         if (loggingProps.getRequestIdPrefix() == null) {

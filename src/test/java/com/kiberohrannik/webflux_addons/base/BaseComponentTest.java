@@ -51,13 +51,12 @@ public abstract class BaseComponentTest extends BaseTest {
     }
 
     protected static WebClient createTestResponseLogWebClient(LoggingProperties logProperties,
-                                                              @Nullable String responseBody,
-                                                              long expectedResponseTimeMillis) {
+                                                              @Nullable String responseBody) {
 
         ResponseMessageCreator msgCreator = new BaseResponseMessageCreator(logProperties, responseLogMsgFormatters);
 
         ResponseMessageCreatorTestDecorator testDecorator = new ResponseMessageCreatorTestDecorator(
-                msgCreator, logProperties, responseBody, expectedResponseTimeMillis);
+                msgCreator, logProperties, responseBody);
 
         ExchangeFilterFunction logResponseFilter = LogResponseFilterFactory.defaultFilter(testDecorator);
 
