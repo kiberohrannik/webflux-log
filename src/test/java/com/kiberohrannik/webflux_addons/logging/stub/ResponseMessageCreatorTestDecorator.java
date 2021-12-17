@@ -43,9 +43,9 @@ public class ResponseMessageCreatorTestDecorator implements ResponseMessageCreat
                 .doOnNext(resData -> {
                     assertWithExchangeTime(responseTimeMillis, resData.getLogMessage(), response);
 
-//                    if (loggingProperties.isLogRequestId()) {
-//                        assertWithReqId(resData.getLogMessage(), response, loggingProperties);
-//                    }
+                    if (loggingProperties.isLogRequestId()) {
+                        assertWithReqId(resData.getLogMessage(), response, loggingProperties);
+                    }
 
                     if (loggingProperties.isLogHeaders()) {
                         assertWithHeaders(loggingProperties.getMaskedHeaders(), resData.getLogMessage(), response);

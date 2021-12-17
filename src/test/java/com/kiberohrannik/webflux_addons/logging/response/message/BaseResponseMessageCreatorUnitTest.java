@@ -5,6 +5,7 @@ import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.response.message.formatter.CookieMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.response.message.formatter.HeaderMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.response.message.formatter.ReqIdMessageFormatter;
+import com.kiberohrannik.webflux_addons.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +59,7 @@ public class BaseResponseMessageCreatorUnitTest extends BaseTest {
                 .cookie("Session", "sid4567")
                 .build();
 
-        long exchangeElapsedTimeMillis = new Random().nextInt();
+        long exchangeElapsedTimeMillis = new Random().nextInt(999);
 
         ResponseData result = responseMessageCreator.formatMessage(exchangeElapsedTimeMillis, testResponse).block();
 
@@ -66,11 +67,13 @@ public class BaseResponseMessageCreatorUnitTest extends BaseTest {
         assertNotNull(result.getResponse());
 
         String actualLogMessage = result.getLogMessage();
+        System.out.println(actualLogMessage);
+
         assertTrue(actualLogMessage.contains("RESPONSE:"));
         assertTrue(actualLogMessage.contains("ELAPSED TIME:"));
         assertTrue(actualLogMessage.contains(String.valueOf(exchangeElapsedTimeMillis)));
 
-        assertTrue(actualLogMessage.contains(testResponse.logPrefix().replaceAll("[\\[\\]\\s]", "")));
+        assertTrue(actualLogMessage.contains(TestUtils.formatToLoggedReqId(testResponse.logPrefix())));
         assertTrue(actualLogMessage.contains(HttpHeaders.AUTHORIZATION + "=Some Auth"));
         assertTrue(actualLogMessage.contains("Session=sid4567"));
 

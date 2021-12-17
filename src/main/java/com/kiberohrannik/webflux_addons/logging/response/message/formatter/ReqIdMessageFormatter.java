@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.response.message.formatter;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
@@ -23,7 +24,7 @@ public class ReqIdMessageFormatter implements ResponseDataMessageFormatter {
 
 
     private String extractReqId(ClientResponse response, LoggingProperties loggingProperties) {
-        String reqId = response.logPrefix();
+        String reqId = LoggingUtils.extractReqId(response.logPrefix());
 
         if (loggingProperties.getRequestIdPrefix() != null) {
             reqId = loggingProperties.getRequestIdPrefix().concat("_").concat(reqId);
