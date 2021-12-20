@@ -2,8 +2,8 @@ package com.kiberohrannik.webflux_addons.logging.client.request.filter;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.kiberohrannik.webflux_addons.base.BaseComponentTest;
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.base.BaseComponentTest;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

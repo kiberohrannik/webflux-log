@@ -1,7 +1,7 @@
-package com.kiberohrannik.webflux_addons.logging.stub;
+package com.kiberohrannik.webflux_addons.logging.client.stub;
 
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.kiberohrannik.webflux_addons.util.TestUtils.formatToLoggedReqId;
+import static com.kiberohrannik.webflux_addons.logging.client.util.TestUtils.formatToLoggedReqId;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

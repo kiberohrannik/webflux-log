@@ -1,6 +1,6 @@
-package com.kiberohrannik.webflux_addons.base;
+package com.kiberohrannik.webflux_addons.logging.client.base;
 
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.request.filter.LogRequestFilterFactory;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.BaseRequestMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.RequestMessageCreator;
@@ -9,8 +9,8 @@ import com.kiberohrannik.webflux_addons.logging.client.response.filter.LogRespon
 import com.kiberohrannik.webflux_addons.logging.client.response.message.BaseResponseMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ResponseDataMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.stub.RequestMessageCreatorTestDecorator;
-import com.kiberohrannik.webflux_addons.logging.stub.ResponseMessageCreatorTestDecorator;
+import com.kiberohrannik.webflux_addons.logging.client.stub.RequestMessageCreatorTestDecorator;
+import com.kiberohrannik.webflux_addons.logging.client.stub.ResponseMessageCreatorTestDecorator;
 import org.springframework.lang.Nullable;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;

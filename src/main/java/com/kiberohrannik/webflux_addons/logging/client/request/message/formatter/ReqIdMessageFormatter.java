@@ -1,7 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.client.request.message.formatter;
 
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 

@@ -1,6 +1,6 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.message;
 
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ResponseDataMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

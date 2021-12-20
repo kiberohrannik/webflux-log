@@ -1,7 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.message.formatter;
 
-import com.kiberohrannik.webflux_addons.base.BaseTest;
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.base.BaseTest;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
-import static com.kiberohrannik.webflux_addons.util.TestUtils.formatToLoggedReqId;
+import static com.kiberohrannik.webflux_addons.logging.client.util.TestUtils.formatToLoggedReqId;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReqIdMessageFormatterUnitTest extends BaseTest {

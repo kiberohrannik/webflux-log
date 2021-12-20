@@ -1,7 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.message.formatter;
 
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
 import org.springframework.http.ResponseCookie;
 import org.springframework.util.LinkedMultiValueMap;

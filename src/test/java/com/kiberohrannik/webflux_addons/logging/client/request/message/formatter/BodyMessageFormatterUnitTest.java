@@ -1,7 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.client.request.message.formatter;
 
-import com.kiberohrannik.webflux_addons.base.BaseTest;
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.base.BaseTest;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
-import static com.kiberohrannik.webflux_addons.logging.LoggingUtils.NO_BODY_MESSAGE;
+import static com.kiberohrannik.webflux_addons.logging.client.LoggingUtils.NO_BODY_MESSAGE;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BodyMessageFormatterUnitTest extends BaseTest {

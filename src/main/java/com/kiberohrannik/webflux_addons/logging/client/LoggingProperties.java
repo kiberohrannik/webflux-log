@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging;
+package com.kiberohrannik.webflux_addons.logging.client;
 
 public final class LoggingProperties {
 

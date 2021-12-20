@@ -1,7 +1,7 @@
-package com.kiberohrannik.webflux_addons.logging.stub;
+package com.kiberohrannik.webflux_addons.logging.client.stub;
 
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.RequestMessageCreator;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.kiberohrannik.webflux_addons.util.TestUtils.formatToLoggedReqId;
+import static com.kiberohrannik.webflux_addons.logging.client.util.TestUtils.formatToLoggedReqId;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RequestMessageCreatorTestDecorator implements RequestMessageCreator {

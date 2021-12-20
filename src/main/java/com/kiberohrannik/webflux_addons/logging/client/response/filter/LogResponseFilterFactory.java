@@ -1,7 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.filter;
 
 
-import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.BaseResponseMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.*;
