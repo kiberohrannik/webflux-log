@@ -1,14 +1,14 @@
 package com.kiberohrannik.webflux_addons.base;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.request.filter.LogRequestFilterFactory;
-import com.kiberohrannik.webflux_addons.logging.request.message.BaseRequestMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.request.message.formatter.*;
-import com.kiberohrannik.webflux_addons.logging.response.filter.LogResponseFilterFactory;
-import com.kiberohrannik.webflux_addons.logging.response.message.BaseResponseMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.response.message.ResponseMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.response.message.formatter.ResponseDataMessageFormatter;
+import com.kiberohrannik.webflux_addons.logging.client.request.filter.LogRequestFilterFactory;
+import com.kiberohrannik.webflux_addons.logging.client.request.message.BaseRequestMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.request.message.RequestMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.*;
+import com.kiberohrannik.webflux_addons.logging.client.response.filter.LogResponseFilterFactory;
+import com.kiberohrannik.webflux_addons.logging.client.response.message.BaseResponseMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ResponseDataMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.stub.RequestMessageCreatorTestDecorator;
 import com.kiberohrannik.webflux_addons.logging.stub.ResponseMessageCreatorTestDecorator;
 import org.springframework.lang.Nullable;
@@ -27,10 +27,10 @@ public abstract class BaseComponentTest extends BaseTest {
     );
 
     private static final List<ResponseDataMessageFormatter> responseLogMsgFormatters = List.of(
-            new com.kiberohrannik.webflux_addons.logging.response.message.formatter.ReqIdMessageFormatter(),
-            new com.kiberohrannik.webflux_addons.logging.response.message.formatter.HeaderMessageFormatter(),
-            new com.kiberohrannik.webflux_addons.logging.response.message.formatter.CookieMessageFormatter(),
-            new com.kiberohrannik.webflux_addons.logging.response.message.formatter.BodyMessageFormatter()
+            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ReqIdMessageFormatter(),
+            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.HeaderMessageFormatter(),
+            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.CookieMessageFormatter(),
+            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.BodyMessageFormatter()
     );
 
 

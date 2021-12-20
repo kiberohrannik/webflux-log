@@ -2,7 +2,7 @@ package com.kiberohrannik.webflux_addons.logging.stub;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
-import com.kiberohrannik.webflux_addons.logging.request.message.RequestMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.request.message.RequestMessageCreator;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 

@@ -2,8 +2,8 @@ package com.kiberohrannik.webflux_addons.logging.stub;
 
 import com.kiberohrannik.webflux_addons.logging.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.LoggingUtils;
-import com.kiberohrannik.webflux_addons.logging.response.message.ResponseData;
-import com.kiberohrannik.webflux_addons.logging.response.message.ResponseMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
+import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
