@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 
+@SpringBootConfiguration
 public class LogRequestFilterComponentTest extends BaseMockServerTest {
 
     @ParameterizedTest

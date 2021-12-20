@@ -5,9 +5,11 @@ import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.CookieMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.HeaderMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.ReqIdMessageFormatter;
+import com.kiberohrannik.webflux_addons.logging.extractor.HeaderExtractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
@@ -29,13 +31,13 @@ public class BaseRequestMessageCreatorUnitTest extends BaseTest {
     private RequestMessageCreator requestMessageCreator;
 
     @Spy
-    private ReqIdMessageFormatter reqIdMessageFormatter;
+    private ReqIdMessageFormatter reqIdFormatter;
+
+    private final HeaderMessageFormatter headerFormatter =
+            Mockito.spy(new HeaderMessageFormatter(new HeaderExtractor()));
 
     @Spy
-    private HeaderMessageFormatter headerMessageFormatter;
-
-    @Spy
-    private CookieMessageFormatter cookieMessageFormatter;
+    private CookieMessageFormatter cookieFormatter;
 
     private final LoggingProperties loggingProperties = LoggingProperties.builder()
             .logHeaders(true)
@@ -47,7 +49,7 @@ public class BaseRequestMessageCreatorUnitTest extends BaseTest {
     @BeforeEach
     void setUp() {
         requestMessageCreator = new BaseRequestMessageCreator(loggingProperties,
-                List.of(reqIdMessageFormatter, headerMessageFormatter, cookieMessageFormatter));
+                List.of(reqIdFormatter, headerFormatter, cookieFormatter));
     }
 
 
@@ -69,8 +71,8 @@ public class BaseRequestMessageCreatorUnitTest extends BaseTest {
         assertTrue(result.contains(HttpHeaders.AUTHORIZATION + "=Some Auth"));
         assertTrue(result.contains("Session=sid4567"));
 
-        verify(reqIdMessageFormatter).addData(eq(testRequest), eq(loggingProperties), any());
-        verify(headerMessageFormatter).addData(eq(testRequest), eq(loggingProperties), any());
-        verify(cookieMessageFormatter).addData(eq(testRequest), eq(loggingProperties), any());
+        verify(reqIdFormatter).addData(eq(testRequest), eq(loggingProperties), any());
+        verify(headerFormatter).addData(eq(testRequest), eq(loggingProperties), any());
+        verify(cookieFormatter).addData(eq(testRequest), eq(loggingProperties), any());
     }
 }

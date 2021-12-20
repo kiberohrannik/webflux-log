@@ -4,11 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-@SpringBootConfiguration
 public abstract class BaseMockServerTest extends BaseComponentTest {
 
     private static final int SERVER_PORT = 8088;

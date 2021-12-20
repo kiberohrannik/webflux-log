@@ -5,6 +5,7 @@ import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.BaseResponseMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.*;
+import com.kiberohrannik.webflux_addons.logging.extractor.HeaderExtractor;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class LogResponseFilterFactory {
     public static ExchangeFilterFunction defaultFilter(LoggingProperties loggingProperties) {
         List<ResponseDataMessageFormatter> formatters = new ArrayList<>();
         formatters.add(new ReqIdMessageFormatter());
-        formatters.add(new HeaderMessageFormatter());
+        formatters.add(new HeaderMessageFormatter(new HeaderExtractor()));
         formatters.add(new CookieMessageFormatter());
         formatters.add(new BodyMessageFormatter());
 

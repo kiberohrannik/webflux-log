@@ -3,6 +3,7 @@ package com.kiberohrannik.webflux_addons.logging.client.response.message.formatt
 import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
+import com.kiberohrannik.webflux_addons.logging.extractor.HeaderExtractor;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HeaderMessageFormatterUnitTest extends BaseTest {
 
-    private final HeaderMessageFormatter formatter = new HeaderMessageFormatter();
+    private final HeaderMessageFormatter formatter = new HeaderMessageFormatter(new HeaderExtractor());
 
     private final ClientResponse response = ClientResponse.create(HttpStatus.OK)
             .header(HttpHeaders.ACCEPT, "application/json")

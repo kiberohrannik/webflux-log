@@ -12,6 +12,7 @@ import com.kiberohrannik.webflux_addons.logging.client.response.message.Response
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ResponseDataMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.stub.RequestMessageCreatorTestDecorator;
 import com.kiberohrannik.webflux_addons.logging.client.stub.ResponseMessageCreatorTestDecorator;
+import com.kiberohrannik.webflux_addons.logging.extractor.HeaderExtractor;
 import org.springframework.lang.Nullable;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,14 +23,15 @@ public abstract class BaseComponentTest extends BaseTest {
 
     private static final List<RequestDataMessageFormatter> requestLogMsgFormatters = List.of(
             new ReqIdMessageFormatter(),
-            new HeaderMessageFormatter(),
+            new HeaderMessageFormatter(new HeaderExtractor()),
             new CookieMessageFormatter(),
             new BodyMessageFormatter()
     );
 
     private static final List<ResponseDataMessageFormatter> responseLogMsgFormatters = List.of(
             new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ReqIdMessageFormatter(),
-            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.HeaderMessageFormatter(),
+            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.HeaderMessageFormatter(
+                    new HeaderExtractor()),
             new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.CookieMessageFormatter(),
             new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.BodyMessageFormatter()
     );

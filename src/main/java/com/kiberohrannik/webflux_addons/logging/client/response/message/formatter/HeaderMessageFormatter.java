@@ -1,18 +1,20 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.message.formatter;
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
+import com.kiberohrannik.webflux_addons.logging.extractor.HeaderExtractor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
-
+@RequiredArgsConstructor
 public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
+
+    private final HeaderExtractor headerExtractor;
+
 
     @Override
     public Mono<ResponseData> addData(LoggingProperties loggingProperties,
@@ -34,11 +36,10 @@ public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
 
         MultiValueMap<String, String> headersToLog = ignoreCookies(response.headers());
 
-        if (props.getMaskedHeaders() == null) {
-            extractAll(headersToLog, sb);
-        } else {
-            extractAll(setMask(headersToLog, props), sb);
+        if (props.getMaskedHeaders() != null) {
+            headerExtractor.setMask(headersToLog, props.getMaskedHeaders());
         }
+        headerExtractor.extractAll(headersToLog, sb);
 
         return sb.append("]").toString();
     }
@@ -48,20 +49,5 @@ public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
         headers.remove(HttpHeaders.SET_COOKIE);
 
         return headers;
-    }
-
-    private MultiValueMap<String, String> setMask(MultiValueMap<String, String> headers, LoggingProperties props) {
-        for (String maskedHeaderName : props.getMaskedHeaders()) {
-            if (headers.getFirst(maskedHeaderName) != null) {
-                headers.put(maskedHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
-            }
-        }
-
-        return headers;
-    }
-
-    private void extractAll(MultiValueMap<String, String> headers, StringBuilder sb) {
-        headers.forEach((headerName, headerValues) -> headerValues
-                .forEach(value -> sb.append(headerName).append("=").append(value).append(" ")));
     }
 }
