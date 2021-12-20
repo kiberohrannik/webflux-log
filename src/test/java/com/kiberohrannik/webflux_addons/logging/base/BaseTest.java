@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.client.base;
+package com.kiberohrannik.webflux_addons.logging.base;
 
 import org.springframework.test.context.ActiveProfiles;
 

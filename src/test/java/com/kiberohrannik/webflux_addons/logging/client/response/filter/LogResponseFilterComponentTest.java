@@ -1,18 +1,13 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.filter;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.kiberohrannik.webflux_addons.logging.client.base.BaseComponentTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.base.BaseMockServerTest;
 import net.bytebuddy.utility.RandomString;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,30 +16,7 @@ import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 
-@SpringBootTest
-@SpringBootConfiguration
-public class BaseLogResponseFilterComponentTest extends BaseComponentTest {
-
-    private static final int SERVER_PORT = 8088;
-    private static final String PATH = "/some/test/path";
-    private static final String URL = "http://localhost:" + SERVER_PORT + PATH;
-
-    private static WireMockServer mockServer;
-
-
-    @BeforeAll
-    static void startMockServer() {
-        WireMock.configureFor(SERVER_PORT);
-
-        mockServer = new WireMockServer(SERVER_PORT);
-        mockServer.start();
-    }
-
-    @AfterAll
-    static void stopMockServer() {
-        mockServer.stop();
-    }
-
+public class LogResponseFilterComponentTest extends BaseMockServerTest {
 
     @ParameterizedTest
     @MethodSource("getLogPropsWithReqId")

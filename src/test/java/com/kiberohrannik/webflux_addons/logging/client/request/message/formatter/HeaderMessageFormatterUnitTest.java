@@ -1,6 +1,6 @@
 package com.kiberohrannik.webflux_addons.logging.client.request.message.formatter;
 
-import com.kiberohrannik.webflux_addons.logging.client.base.BaseTest;
+import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;

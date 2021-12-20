@@ -1,6 +1,6 @@
 package com.kiberohrannik.webflux_addons.logging.client.request.filter;
 
-import com.kiberohrannik.webflux_addons.logging.client.base.BaseTest;
+import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.BaseRequestMessageCreator;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.RequestMessageCreator;
