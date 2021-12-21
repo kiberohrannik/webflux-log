@@ -18,7 +18,7 @@ public class LoggingFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        return serverMessageCreator.formatMessage(exchange.getRequest())
+        return serverMessageCreator.formatMessage(exchange)
                 .doOnNext(log::info)
                 .then(chain.filter(exchange));
     }

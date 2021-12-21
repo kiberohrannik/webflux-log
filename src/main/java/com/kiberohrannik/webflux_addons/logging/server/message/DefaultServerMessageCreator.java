@@ -3,27 +3,27 @@ package com.kiberohrannik.webflux_addons.logging.server.message;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-public class BaseServerMessageCreator implements ServerMessageCreator {
+public final class DefaultServerMessageCreator implements ServerMessageCreator {
 
     private final LoggingProperties loggingProperties;
     private final List<ServerMessageFormatter> serverMessageFormatters;
 
 
     @Override
-    public Mono<String> formatMessage(ServerHttpRequest request) {
-        String baseMessage = "REQUEST: ".concat(request.getMethodValue()).concat(" ")
-                .concat(request.getURI().toString());
+    public Mono<String> formatMessage(ServerWebExchange exchange) {
+        String baseMessage = "REQUEST: ".concat(exchange.getRequest().getMethodValue()).concat(" ")
+                .concat(exchange.getRequest().getURI().toString());
 
         Mono<String> logMessage = Mono.just(baseMessage);
 
         for (ServerMessageFormatter formatter : serverMessageFormatters) {
-            logMessage = formatter.addData(request, loggingProperties, logMessage);
+            logMessage = formatter.addData(exchange, loggingProperties, logMessage);
         }
 
         return logMessage;

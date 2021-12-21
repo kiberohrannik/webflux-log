@@ -34,7 +34,8 @@ public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
     private String formatHeaderMessage(ClientResponse response, LoggingProperties props) {
         StringBuilder sb = new StringBuilder("\nHEADERS: [ ");
 
-        MultiValueMap<String, String> headersToLog = ignoreCookies(response.headers());
+        MultiValueMap<String, String> headersToLog = new LinkedMultiValueMap<>(response.headers().asHttpHeaders());
+        headersToLog.remove(HttpHeaders.SET_COOKIE);
 
         if (props.getMaskedHeaders() != null) {
             headerExtractor.setMask(headersToLog, props.getMaskedHeaders());
@@ -42,12 +43,5 @@ public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
         headerExtractor.extractAll(headersToLog, sb);
 
         return sb.append("]").toString();
-    }
-
-    private MultiValueMap<String, String> ignoreCookies(ClientResponse.Headers sourceHeaders) {
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>(sourceHeaders.asHttpHeaders());
-        headers.remove(HttpHeaders.SET_COOKIE);
-
-        return headers;
     }
 }
