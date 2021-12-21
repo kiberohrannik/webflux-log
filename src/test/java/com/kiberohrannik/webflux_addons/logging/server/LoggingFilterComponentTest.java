@@ -47,8 +47,8 @@ public class LoggingFilterComponentTest extends BaseTest {
                 .cookie("Cookie-1", RandomString.make(10))
                 .cookie("Cookie-1", RandomString.make(10))
                 .cookie("Cookie-3", RandomString.make(5))
-//                .bodyValue("{\"some\":\"body\"}")
-                .bodyValue("{\"name\":\"zhengtao\",\"age\":18,\"isHandsome\":true,\"email\":\"hj_zhengt@163.com\",\"timestamp\":1598963565962,\"oneDate\":\"2009-09-01 14:22:41\",\"birthday\":\"1991-10-01\",\"address\":{\"country\":\"China\",\"province\":\"AnHui\",\"city\":\"MingGuang\"},\"hobbys\":[{\"order\":\"first\",\"name\":\"coding\"},{\"order\":\"second\",\"name\":\"fishing\"},{\"order\":\"third\",\"name\":\"whatever\"}]}")
+                .bodyValue("{\"some\":\"body\"}")
+//                .bodyValue("{\"name\":\"zhengtao\",\"age\":18,\"isHandsome\":true,\"email\":\"hj_zhengt@163.com\",\"timestamp\":1598963565962,\"oneDate\":\"2009-09-01 14:22:41\",\"birthday\":\"1991-10-01\",\"address\":{\"country\":\"China\",\"province\":\"AnHui\",\"city\":\"MingGuang\"},\"hobbys\":[{\"order\":\"first\",\"name\":\"coding\"},{\"order\":\"second\",\"name\":\"fishing\"},{\"order\":\"third\",\"name\":\"whatever\"}]}")
 
                 .exchange()
                 .expectStatus().isOk()
@@ -92,7 +92,6 @@ public class LoggingFilterComponentTest extends BaseTest {
         public Mono<String> testEndpoint(@RequestBody Mono<String> requestBody) {
             return requestBody.doOnNext(Assertions::assertNotNull)
                     .map(body -> {
-                        System.out.println("\n\n REQUEST: " + body + "\n\n");
                         return body.concat("-RESPONSE");
                     });
         }
