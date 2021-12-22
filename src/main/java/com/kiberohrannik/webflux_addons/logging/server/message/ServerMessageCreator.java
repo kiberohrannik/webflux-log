@@ -6,5 +6,7 @@ import reactor.core.publisher.Mono;
 
 public interface ServerMessageCreator {
 
-    Mono<String> formatMessage(ServerWebExchange exchange);
+    Mono<String> createForRequest(ServerWebExchange exchange);
+
+    String createForResponse(ServerWebExchange exchange);
 }

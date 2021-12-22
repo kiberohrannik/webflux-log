@@ -9,23 +9,23 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
-public class LoggingFilter implements WebFilter {
 
-    private static final Log log = LogFactory.getLog(LoggingFilter.class);
+@RequiredArgsConstructor
+public class LoggingFilter2 implements WebFilter {
+
+    private static final Log log = LogFactory.getLog(LoggingFilter2.class);
     private final ServerMessageCreator serverMessageCreator;
 
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        long startMillis = System.currentTimeMillis();
+        Mono<Void> mono = chain.filter(exchange);
 
-        return serverMessageCreator.createForRequest(exchange)
-                .doOnNext(log::info)
-                .then(chain.filter(exchange)
-                        .doFinally(signalType -> {
-                            log.info("Elapsed Time: " + (System.currentTimeMillis() - startMillis) + " ms");
-                            log.info(serverMessageCreator.createForResponse(exchange));
-                        }));
+        exchange.getResponse().beforeCommit(
+                () -> Mono.defer(() -> Mono.just(exchange))
+                        .doOnNext(exch -> log.info(serverMessageCreator.createForResponse(exch)))
+                        .then());
+
+        return mono;
     }
 }

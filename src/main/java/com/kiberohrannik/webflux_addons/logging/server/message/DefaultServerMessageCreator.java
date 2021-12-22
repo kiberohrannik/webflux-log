@@ -16,7 +16,7 @@ public final class DefaultServerMessageCreator implements ServerMessageCreator {
 
 
     @Override
-    public Mono<String> formatMessage(ServerWebExchange exchange) {
+    public Mono<String> createForRequest(ServerWebExchange exchange) {
         String baseMessage = "REQUEST: ".concat(exchange.getRequest().getMethodValue()).concat(" ")
                 .concat(exchange.getRequest().getURI().toString());
 
@@ -27,5 +27,13 @@ public final class DefaultServerMessageCreator implements ServerMessageCreator {
         }
 
         return logMessage;
+    }
+
+    @Override
+    public String createForResponse(ServerWebExchange exchange) {
+        exchange.getResponse().setComplete();
+        String baseMessage = "RESPONSE:";
+        return baseMessage + " " + exchange.getResponse().getHeaders() + " " + exchange.getResponse().getStatusCode()
+                + " " + exchange.getAttributes();
     }
 }

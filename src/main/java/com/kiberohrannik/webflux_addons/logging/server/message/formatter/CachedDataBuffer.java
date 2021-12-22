@@ -1,9 +1,6 @@
 package com.kiberohrannik.webflux_addons.logging.server.message.formatter;
 
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.core.io.buffer.DataBufferWrapper;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.core.io.buffer.*;
 
 import java.nio.charset.Charset;
 
@@ -11,11 +8,15 @@ public class CachedDataBuffer extends DataBufferWrapper {
 
     private final DataBuffer cachedBuffer;
 
+    private final DataBuffer delegate;
+
 
     public CachedDataBuffer(DataBuffer delegate) {
         super(delegate);
-        cachedBuffer = new DefaultDataBufferFactory().allocateBuffer(delegate.readableByteCount());
+        cachedBuffer = delegate.factory().allocateBuffer(delegate.readableByteCount());
         cachedBuffer.write(delegate.asByteBuffer().duplicate());
+
+        this.delegate = delegate;
     }
 
 
