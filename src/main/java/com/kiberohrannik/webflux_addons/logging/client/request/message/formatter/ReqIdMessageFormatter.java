@@ -8,23 +8,20 @@ import reactor.core.publisher.Mono;
 public class ReqIdMessageFormatter implements RequestDataMessageFormatter {
 
     @Override
-    public Mono<String> addData(ClientRequest request,
-                                LoggingProperties loggingProperties,
-                                Mono<String> sourceMessage) {
-
-        if (loggingProperties.isLogRequestId()) {
-            return sourceMessage.map(source -> source.concat(extractReqId(request, loggingProperties)));
+    public Mono<String> addData(ClientRequest request, LoggingProperties logProps, Mono<String> source) {
+        if (logProps.isLogRequestId()) {
+            return source.map(message -> message.concat(extractReqId(request, logProps)));
         }
 
-        return sourceMessage;
+        return source;
     }
 
 
-    private String extractReqId(ClientRequest request, LoggingProperties loggingProperties) {
-        String reqId = LoggingUtils.extractReqId(request.logPrefix());
+    private String extractReqId(ClientRequest request, LoggingProperties logProps) {
+        String reqId = LoggingUtils.formatReqId(request.logPrefix());
 
-        if (loggingProperties.getRequestIdPrefix() != null) {
-            reqId = loggingProperties.getRequestIdPrefix().concat("_").concat(reqId);
+        if (logProps.getRequestIdPrefix() != null) {
+            reqId = logProps.getRequestIdPrefix().concat("_").concat(reqId);
         }
 
         return "\nREQ-ID: [ ".concat(reqId).concat(" ]");

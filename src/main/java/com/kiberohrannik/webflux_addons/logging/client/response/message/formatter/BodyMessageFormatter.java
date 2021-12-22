@@ -9,14 +9,12 @@ import reactor.core.publisher.Mono;
 public class BodyMessageFormatter implements ResponseDataMessageFormatter {
 
     @Override
-    public Mono<ResponseData> addData(LoggingProperties loggingProperties,
-                                      Mono<ResponseData> sourceMessage) {
-
-        if (loggingProperties.isLogBody()) {
-            return sourceMessage.flatMap(source -> addBody(source.getResponse(), source.getLogMessage()));
+    public Mono<ResponseData> addData(LoggingProperties logProps, Mono<ResponseData> source) {
+        if (logProps.isLogBody()) {
+            return source.flatMap(message -> addBody(message.getResponse(), message.getLogMessage()));
         }
 
-        return sourceMessage;
+        return source;
     }
 
 
@@ -29,7 +27,6 @@ public class BodyMessageFormatter implements ResponseDataMessageFormatter {
                 .switchIfEmpty(
                         Mono.just(new ResponseData(response, formatMessage(LoggingUtils.NO_BODY_MESSAGE, source))));
     }
-
 
     private String formatMessage(String body, String source) {
         return source.concat("\nBODY: [ ").concat(body).concat(" ]");

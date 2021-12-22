@@ -2,12 +2,15 @@ package com.kiberohrannik.webflux_addons.logging.server;
 
 import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.extractor.HeaderExtractor;
+import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
+import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
 import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.*;
+import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.CookieRequestMessageFormatter;
+import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.HeaderRequestMessageFormatter;
+import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.ReqIdRequestMessageFormatter;
+import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
@@ -15,10 +18,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,10 +80,9 @@ public class LoggingFilterComponentTest extends BaseTest {
                     .build();
 
             List<ServerMessageFormatter> formatters = List.of(
-//                    new ReqIdMessageFormatter(),
-//                    new HeaderMessageFormatter(new HeaderExtractor()),
-//                    new CookieMessageFormatter(),
-                    new BodyMessageFormatter()
+                    new ReqIdRequestMessageFormatter(),
+                    new HeaderRequestMessageFormatter(new HeaderProvider()),
+                    new CookieRequestMessageFormatter(new CookieProvider())
             );
 
             return new LoggingFilter(new DefaultServerMessageCreator(props, formatters));

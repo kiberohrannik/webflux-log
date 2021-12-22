@@ -9,6 +9,6 @@ public class TestUtils {
     }
 
     public static String formatToLoggedReqId(String logPrefix) {
-        return LoggingUtils.extractReqId(logPrefix);
+        return LoggingUtils.formatReqId(logPrefix);
     }
 }

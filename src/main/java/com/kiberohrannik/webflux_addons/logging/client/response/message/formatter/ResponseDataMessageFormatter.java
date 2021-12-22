@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface ResponseDataMessageFormatter {
 
-    Mono<ResponseData> addData(LoggingProperties loggingProperties, Mono<ResponseData> sourceMessage);
+    Mono<ResponseData> addData(LoggingProperties logProps, Mono<ResponseData> source);
 }

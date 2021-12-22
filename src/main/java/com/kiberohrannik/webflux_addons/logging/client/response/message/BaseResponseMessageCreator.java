@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.message;
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ResponseDataMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class BaseResponseMessageCreator implements ResponseMessageCreator {
     @Override
     public Mono<ResponseData> formatMessage(Long responseTimeMillis, ClientResponse response) {
         String baseMessage = "RESPONSE:"
-                + formatResponseTimeMessage(responseTimeMillis)
+                + " ELAPSED TIME: " + LoggingUtils.formatResponseTime(responseTimeMillis)
                 + formatHttpStatusMessage(response.rawStatusCode());
 
         Mono<ResponseData> logData = Mono.just(new ResponseData(response, baseMessage));
@@ -32,13 +33,9 @@ public class BaseResponseMessageCreator implements ResponseMessageCreator {
     }
 
 
-    private String formatResponseTimeMessage(long responseTimeMillis) {
-        String timeStr = responseTimeMillis < 1000
-                ? responseTimeMillis + "ms"
-                : TimeUnit.MICROSECONDS.toSeconds(responseTimeMillis) + "s";
-
-        return " ELAPSED TIME: " + timeStr;
-    }
+//    private String formatResponseTimeMessage(long responseTimeMillis) {
+//        return " ELAPSED TIME: " + LoggingUtils.formatResponseTime(responseTimeMillis);
+//    }
 
     private String formatHttpStatusMessage(int rawStatusCode) {
         String msg = " STATUS: " + rawStatusCode;

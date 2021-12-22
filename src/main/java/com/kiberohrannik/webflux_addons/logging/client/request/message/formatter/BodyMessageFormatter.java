@@ -12,15 +12,10 @@ public class BodyMessageFormatter implements RequestDataMessageFormatter {
 
 
     @Override
-    public Mono<String> addData(ClientRequest request,
-                                LoggingProperties loggingProperties,
-                                Mono<String> sourceMessage) {
-
-        if (loggingProperties.isLogBody()) {
-            return sourceMessage.flatMap(source -> addBody(request, source));
-        }
-
-        return sourceMessage;
+    public Mono<String> addData(ClientRequest request, LoggingProperties logProps, Mono<String> source) {
+        return logProps.isLogBody()
+                ? source.flatMap(message -> addBody(request, message))
+                : source;
     }
 
 

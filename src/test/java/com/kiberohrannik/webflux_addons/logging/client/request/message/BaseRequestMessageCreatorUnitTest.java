@@ -5,7 +5,8 @@ import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.CookieMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.HeaderMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.ReqIdMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.extractor.HeaderExtractor;
+import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
+import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,10 +35,11 @@ public class BaseRequestMessageCreatorUnitTest extends BaseTest {
     private ReqIdMessageFormatter reqIdFormatter;
 
     private final HeaderMessageFormatter headerFormatter =
-            Mockito.spy(new HeaderMessageFormatter(new HeaderExtractor()));
+            Mockito.spy(new HeaderMessageFormatter(new HeaderProvider()));
 
-    @Spy
-    private CookieMessageFormatter cookieFormatter;
+    private final CookieMessageFormatter cookieFormatter =
+            Mockito.spy(new CookieMessageFormatter(new CookieProvider()));
+
 
     private final LoggingProperties loggingProperties = LoggingProperties.builder()
             .logHeaders(true)

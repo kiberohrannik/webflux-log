@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface RequestDataMessageFormatter {
 
-    Mono<String> addData(ClientRequest request, LoggingProperties loggingProperties, Mono<String> sourceMessage);
+    Mono<String> addData(ClientRequest request, LoggingProperties logProps, Mono<String> source);
 }
