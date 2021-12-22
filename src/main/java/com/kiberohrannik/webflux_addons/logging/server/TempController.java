@@ -7,13 +7,14 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
+import java.util.Random;
 
 @RestController
 public class TempController {
 
     @PostMapping("/test/endpoint")
     public Mono<String> testEndpoint(@RequestBody Mono<String> requestBody, ServerWebExchange exchange) {
-        exchange.getResponse().setRawStatusCode(220);
+//        exchange.getResponse().setRawStatusCode(220);
         return requestBody
                 .switchIfEmpty(Mono.error(() -> {
                     return new RuntimeException();
@@ -21,7 +22,10 @@ public class TempController {
                 .doOnNext(Objects::requireNonNull)
                 .map(body -> {
                     try {
-                        Thread.sleep(100);
+                        int delay = new Random().nextInt(300);
+                        System.out.println("delay = " + delay);
+                        Thread.sleep(delay);
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

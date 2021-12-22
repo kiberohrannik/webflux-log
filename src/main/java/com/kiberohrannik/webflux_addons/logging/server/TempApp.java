@@ -3,11 +3,13 @@ package com.kiberohrannik.webflux_addons.logging.server;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
 import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
-import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerRequestLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerResponseLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.DefaultTimeElapsedLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ReqIdMessageFormatter;
+import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.CookieRequestMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.HeaderRequestMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.ReqIdRequestMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -34,11 +36,15 @@ public class TempApp {
                 .build();
 
         List<ServerMessageFormatter> formatters = List.of(
-                new ReqIdRequestMessageFormatter(),
+                new ReqIdMessageFormatter(),
                 new HeaderRequestMessageFormatter(new HeaderProvider()),
                 new CookieRequestMessageFormatter(new CookieProvider())
         );
 
-        return new LoggingFilter(new DefaultServerMessageCreator(props, formatters));
+        return new LoggingFilter(
+                new DefaultServerRequestLogger(props, formatters),
+                new DefaultServerResponseLogger(props, formatters),
+                new DefaultTimeElapsedLogger(props)
+        );
     }
 }

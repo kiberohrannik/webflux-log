@@ -9,6 +9,6 @@ public class TestUtils {
     }
 
     public static String formatToLoggedReqId(String logPrefix) {
-        return LoggingUtils.formatReqId(logPrefix);
+        return logPrefix.replaceFirst("\\[", "").replaceFirst("]", "").replaceAll("\\s", "");
     }
 }

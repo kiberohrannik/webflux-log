@@ -1,15 +1,14 @@
 package com.kiberohrannik.webflux_addons.logging.client.response.message;
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ResponseDataMessageFormatter;
+import com.kiberohrannik.webflux_addons.logging.provider.HttpStatusProvider;
+import com.kiberohrannik.webflux_addons.logging.provider.TimeElapsedProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 public class BaseResponseMessageCreator implements ResponseMessageCreator {
@@ -17,12 +16,15 @@ public class BaseResponseMessageCreator implements ResponseMessageCreator {
     private final LoggingProperties loggingProperties;
     private final List<ResponseDataMessageFormatter> messageFormatters;
 
+    private final HttpStatusProvider httpStatusProvider = new HttpStatusProvider();
+    private final TimeElapsedProvider timeElapsedProvider = new TimeElapsedProvider();
+
 
     @Override
     public Mono<ResponseData> formatMessage(Long responseTimeMillis, ClientResponse response) {
         String baseMessage = "RESPONSE:"
-                + " ELAPSED TIME: " + LoggingUtils.formatResponseTime(responseTimeMillis)
-                + formatHttpStatusMessage(response.rawStatusCode());
+                + timeElapsedProvider.createMessage(responseTimeMillis)
+                + httpStatusProvider.createMessage(response.rawStatusCode());
 
         Mono<ResponseData> logData = Mono.just(new ResponseData(response, baseMessage));
         for (ResponseDataMessageFormatter formatter : messageFormatters) {
@@ -30,20 +32,5 @@ public class BaseResponseMessageCreator implements ResponseMessageCreator {
         }
 
         return logData;
-    }
-
-
-//    private String formatResponseTimeMessage(long responseTimeMillis) {
-//        return " ELAPSED TIME: " + LoggingUtils.formatResponseTime(responseTimeMillis);
-//    }
-
-    private String formatHttpStatusMessage(int rawStatusCode) {
-        String msg = " STATUS: " + rawStatusCode;
-
-        HttpStatus httpStatus = HttpStatus.resolve(rawStatusCode);
-        if (httpStatus != null) {
-            msg += " " + httpStatus.getReasonPhrase();
-        }
-        return msg;
     }
 }
