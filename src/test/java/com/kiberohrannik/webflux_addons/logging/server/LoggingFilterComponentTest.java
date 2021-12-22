@@ -79,39 +79,14 @@ public class LoggingFilterComponentTest extends BaseTest {
                     .build();
 
             List<ServerMessageFormatter> formatters = List.of(
-                    new ReqIdMessageFormatter(),
-                    new HeaderMessageFormatter(new HeaderExtractor()),
-                    new CookieMessageFormatter(),
+//                    new ReqIdMessageFormatter(),
+//                    new HeaderMessageFormatter(new HeaderExtractor()),
+//                    new CookieMessageFormatter(),
                     new BodyMessageFormatter()
             );
 
             return new LoggingFilter(new DefaultServerMessageCreator(props, formatters));
         }
-
-//        @Order(value = Integer.MAX_VALUE)
-//        @Bean
-//        public WebFilter loggingFilter2() {
-//            LoggingProperties props = LoggingProperties.builder()
-//                    .logRequestId(true)
-//                    .logHeaders(true)
-//                    .logCookies(true)
-//                    .logBody(true)
-//                    .build();
-//
-//            List<ServerMessageFormatter> formatters = List.of(
-//                    new ReqIdMessageFormatter(),
-//                    new HeaderMessageFormatter(new HeaderExtractor()),
-//                    new CookieMessageFormatter(),
-//                    new BodyMessageFormatter()
-//            );
-//
-//            return new LoggingFilter2(new DefaultServerMessageCreator(props, formatters));
-//        }
-
-//        @Bean
-//        public HttpHandler loggingHandler() {
-//            return new LoggingHandler();
-//        }
     }
 
     @RestController

@@ -30,9 +30,9 @@ public class TempApp {
                 .build();
 
         List<ServerMessageFormatter> formatters = List.of(
-                new ReqIdMessageFormatter(),
-                new HeaderMessageFormatter(new HeaderExtractor()),
-                new CookieMessageFormatter(),
+//                new ReqIdMessageFormatter(),
+//                new HeaderMessageFormatter(new HeaderExtractor()),
+//                new CookieMessageFormatter(),
                 new BodyMessageFormatter()
         );
 

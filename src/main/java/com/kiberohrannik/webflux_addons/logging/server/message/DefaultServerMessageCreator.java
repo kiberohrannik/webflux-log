@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.server.message;
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
+import com.kiberohrannik.webflux_addons.logging.server.RequestData;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.server.ServerWebExchange;
@@ -16,14 +17,15 @@ public final class DefaultServerMessageCreator implements ServerMessageCreator {
 
 
     @Override
-    public Mono<String> createForRequest(ServerWebExchange exchange) {
+    public Mono<RequestData> createForRequest(ServerWebExchange exchange) {
         String baseMessage = "REQUEST: ".concat(exchange.getRequest().getMethodValue()).concat(" ")
                 .concat(exchange.getRequest().getURI().toString());
 
-        Mono<String> logMessage = Mono.just(baseMessage);
+//        Mono<String> logMessage = Mono.just(baseMessage);
+        Mono<RequestData> logMessage = Mono.just(new RequestData(exchange.getRequest(), baseMessage));
 
         for (ServerMessageFormatter formatter : serverMessageFormatters) {
-            logMessage = formatter.addData(exchange, loggingProperties, logMessage);
+            logMessage = formatter.addData(loggingProperties, logMessage);
         }
 
         return logMessage;
