@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public final class DefaultServerRequestLogger implements ServerRequestLogger {
 
-    private static final Log log = LogFactory.getLog(LoggingServerHttpRequestDecorator.class);
+    private static final Log log = LogFactory.getLog(DefaultServerRequestLogger.class);
 
     private final LoggingProperties loggingProperties;
     private final List<ServerMessageFormatter> serverMessageFormatters;

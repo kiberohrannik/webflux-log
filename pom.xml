@@ -8,6 +8,8 @@
     <artifactId>webflux-addons</artifactId>
     <version>${project.version}</version>
 
+    <name>webflux-addons</name>
+
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

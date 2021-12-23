@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 @RequiredArgsConstructor
 public final class DefaultTimeElapsedLogger implements TimeElapsedLogger {
 
-    private static final Log log = LogFactory.getLog(LoggingServerHttpRequestDecorator.class);
+    private static final Log log = LogFactory.getLog(DefaultTimeElapsedLogger.class);
 
     private final LoggingProperties loggingProperties;
 
