@@ -31,10 +31,8 @@ public abstract class BaseComponentTest extends BaseTest {
 
     private static final List<ResponseDataMessageFormatter> responseLogMsgFormatters = List.of(
             new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ReqIdMessageFormatter(),
-            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.HeaderMessageFormatter(
-                    new HeaderProvider()),
-            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.CookieMessageFormatter(
-                    new CookieProvider()),
+            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.HeaderMessageFormatter(),
+            new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.CookieMessageFormatter(),
             new com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.BodyMessageFormatter()
     );
 

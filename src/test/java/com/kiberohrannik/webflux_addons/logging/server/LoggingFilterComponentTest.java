@@ -2,15 +2,6 @@ package com.kiberohrannik.webflux_addons.logging.server;
 
 import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
-import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
-import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerRequestLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerResponseLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.DefaultTimeElapsedLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ReqIdMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.CookieRequestMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.HeaderRequestMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,7 +23,6 @@ import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.List;
 
 @WebFluxTest(controllers = LoggingFilterComponentTest.TestController.class)
 @Import(LoggingFilterComponentTest.LoggingFilterConfig.class)
@@ -89,17 +79,7 @@ public class LoggingFilterComponentTest extends BaseTest {
                     .logBody(true)
                     .build();
 
-            List<ServerMessageFormatter> formatters = List.of(
-                    new ReqIdMessageFormatter(),
-                    new HeaderRequestMessageFormatter(new HeaderProvider()),
-                    new CookieRequestMessageFormatter(new CookieProvider())
-            );
-
-            return new LoggingFilter(
-                    new DefaultServerRequestLogger(props, formatters),
-                    new DefaultServerResponseLogger(props, formatters),
-                    new DefaultTimeElapsedLogger(props)
-            );
+            return ServerLoggingFilterFactory.defaultFilter(props);
         }
     }
 

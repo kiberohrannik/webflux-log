@@ -13,9 +13,9 @@ import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HeaderMessageFormatterUnitTest extends BaseTest {
+public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
 
-    private final HeaderMessageFormatter formatter = new HeaderMessageFormatter(new HeaderProvider());
+    private final HeaderMessageFormatter formatter = new HeaderMessageFormatter();
 
     private final ClientResponse response = ClientResponse.create(HttpStatus.OK)
             .header(HttpHeaders.ACCEPT, "application/json")

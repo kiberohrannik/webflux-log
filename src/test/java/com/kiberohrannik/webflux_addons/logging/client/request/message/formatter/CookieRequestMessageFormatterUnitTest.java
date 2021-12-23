@@ -13,7 +13,7 @@ import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CookieMessageFormatterUnitTest extends BaseTest {
+public class CookieRequestMessageFormatterUnitTest extends BaseTest {
 
     private final CookieMessageFormatter formatter = new CookieMessageFormatter(new CookieProvider());
 

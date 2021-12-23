@@ -3,9 +3,9 @@ package com.kiberohrannik.webflux_addons.logging.server;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
 import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
-import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerRequestLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.DefaultServerResponseLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.DefaultTimeElapsedLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultServerRequestLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultServerResponseLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultTimeElapsedLogger;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ReqIdMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.CookieRequestMessageFormatter;
@@ -35,16 +35,6 @@ public class TempApp {
                 .logBody(true)
                 .build();
 
-        List<ServerMessageFormatter> formatters = List.of(
-                new ReqIdMessageFormatter(),
-                new HeaderRequestMessageFormatter(new HeaderProvider()),
-                new CookieRequestMessageFormatter(new CookieProvider())
-        );
-
-        return new LoggingFilter(
-                new DefaultServerRequestLogger(props, formatters),
-                new DefaultServerResponseLogger(props, formatters),
-                new DefaultTimeElapsedLogger(props)
-        );
+        return ServerLoggingFilterFactory.defaultFilter(props);
     }
 }

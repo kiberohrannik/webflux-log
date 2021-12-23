@@ -3,16 +3,14 @@ package com.kiberohrannik.webflux_addons.logging.client.response.message.formatt
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
 import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
 public class HeaderMessageFormatter implements ResponseDataMessageFormatter {
 
-    private final HeaderProvider provider;
+    private final HeaderProvider provider = new HeaderProvider();
 
 
     @Override

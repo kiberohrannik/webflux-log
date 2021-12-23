@@ -17,8 +17,8 @@ public class LogResponseFilterFactory {
     public static ExchangeFilterFunction defaultFilter(LoggingProperties loggingProperties) {
         List<ResponseDataMessageFormatter> formatters = new ArrayList<>();
         formatters.add(new ReqIdMessageFormatter());
-        formatters.add(new HeaderMessageFormatter(new HeaderProvider()));
-        formatters.add(new CookieMessageFormatter(new CookieProvider()));
+        formatters.add(new HeaderMessageFormatter());
+        formatters.add(new CookieMessageFormatter());
         formatters.add(new BodyMessageFormatter());
 
         return new LogResponseFilter(new BaseResponseMessageCreator(loggingProperties, formatters));

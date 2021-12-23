@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.server.message;
+package com.kiberohrannik.webflux_addons.logging.server.message.logger;
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.ReqIdProvider;
@@ -21,7 +21,7 @@ public final class DefaultTimeElapsedLogger implements TimeElapsedLogger {
     @Override
     public void log(long startTimeMillis, String logPrefix) {
         String reqIdMessage = reqIdProvider.createMessage(logPrefix, loggingProperties);
-        String elapsedTimeMessage = timeElapsedProvider.createMessage(startTimeMillis);
+        String elapsedTimeMessage = timeElapsedProvider.createMessage(System.currentTimeMillis() - startTimeMillis);
 
         log.info(reqIdMessage.trim().concat(elapsedTimeMessage));
     }

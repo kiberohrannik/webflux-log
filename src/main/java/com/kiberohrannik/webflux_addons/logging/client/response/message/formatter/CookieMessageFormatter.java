@@ -6,10 +6,9 @@ import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
 public class CookieMessageFormatter implements ResponseDataMessageFormatter {
 
-    private final CookieProvider provider;
+    private final CookieProvider provider = new CookieProvider();
 
 
     @Override

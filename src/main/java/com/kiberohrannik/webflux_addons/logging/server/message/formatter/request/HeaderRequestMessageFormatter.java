@@ -9,10 +9,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 
-@RequiredArgsConstructor
 public final class HeaderRequestMessageFormatter implements ServerMessageFormatter {
 
-    private final HeaderProvider provider;
+    private final HeaderProvider provider = new HeaderProvider();
 
 
     @Override

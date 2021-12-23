@@ -12,9 +12,9 @@ import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CookieMessageFormatterUnitTest extends BaseTest {
+public class CookieRequestMessageFormatterUnitTest extends BaseTest {
 
-    private final CookieMessageFormatter formatter = new CookieMessageFormatter(new CookieProvider());
+    private final CookieMessageFormatter formatter = new CookieMessageFormatter();
 
     private final ClientResponse response = ClientResponse.create(HttpStatus.OK)
             .cookie("Cookie-1", "some-text-one")

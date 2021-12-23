@@ -1,4 +1,4 @@
-package com.kiberohrannik.webflux_addons.logging.server.message;
+package com.kiberohrannik.webflux_addons.logging.server.message.logger;
 
 import com.kiberohrannik.webflux_addons.logging.provider.BodyProvider;
 import org.apache.commons.logging.Log;
