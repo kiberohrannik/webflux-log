@@ -2,16 +2,14 @@ package com.kiberohrannik.webflux_addons.logging.client.request.message.formatte
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
-import lombok.RequiredArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
 public class HeaderMessageFormatter implements RequestDataMessageFormatter {
 
-    private final HeaderProvider provider;
+    private final HeaderProvider provider = new HeaderProvider();
 
 
     @Override

@@ -2,7 +2,6 @@ package com.kiberohrannik.webflux_addons.logging.client.request.message.formatte
 
 import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CookieRequestMessageFormatterUnitTest extends BaseTest {
 
-    private final CookieMessageFormatter formatter = new CookieMessageFormatter(new CookieProvider());
+    private final CookieMessageFormatter formatter = new CookieMessageFormatter();
 
     private final ClientRequest testRequest = ClientRequest.create(HttpMethod.GET, URI.create("/someUri"))
             .cookie("Cookie-1", "some-text-one")

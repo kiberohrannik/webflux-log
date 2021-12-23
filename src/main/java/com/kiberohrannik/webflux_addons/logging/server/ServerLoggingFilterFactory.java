@@ -15,7 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ServerLoggingFilterFactory {
 
-    public static LoggingFilter defaultFilter(LoggingProperties loggingProperties) {
+    public static LoggingFilter defaultFilter(LoggingProperties requestLogProps,
+                                              LoggingProperties responseLogProps) {
+
         List<ServerMessageFormatter> requestFormatters = List.of(
                 new ReqIdMessageFormatter(),
                 new HeaderRequestMessageFormatter(),
@@ -29,9 +31,9 @@ public class ServerLoggingFilterFactory {
         );
 
         return new LoggingFilter(
-                new DefaultServerRequestLogger(loggingProperties, requestFormatters),
-                new DefaultServerResponseLogger(loggingProperties, responseFormatters),
-                new DefaultTimeElapsedLogger(loggingProperties)
+                new DefaultServerRequestLogger(requestLogProps, requestFormatters),
+                new DefaultServerResponseLogger(requestLogProps, responseFormatters),
+                new DefaultTimeElapsedLogger(requestLogProps)
         );
     }
 

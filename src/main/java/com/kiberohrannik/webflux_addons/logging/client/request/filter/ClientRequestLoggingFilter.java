@@ -11,9 +11,9 @@ import org.springframework.web.reactive.function.client.ExchangeFunction;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class LogRequestFilter implements ExchangeFilterFunction {
+public class ClientRequestLoggingFilter implements ExchangeFilterFunction {
 
-    private static final Log log = LogFactory.getLog(LogRequestFilter.class);
+    private static final Log log = LogFactory.getLog(ClientRequestLoggingFilter.class);
     private final RequestMessageCreator messageCreator;
 
 

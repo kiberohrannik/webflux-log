@@ -79,7 +79,7 @@ public class LoggingFilterComponentTest extends BaseTest {
                     .logBody(true)
                     .build();
 
-            return ServerLoggingFilterFactory.defaultFilter(props);
+            return ServerLoggingFilterFactory.defaultFilter(props, props);
         }
     }
 

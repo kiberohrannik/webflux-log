@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 
 @SpringBootConfiguration
-public class LogRequestFilterComponentTest extends BaseMockServerTest {
+public class ClientRequestLoggingFilterComponentTest extends BaseMockServerTest {
 
     @ParameterizedTest
     @MethodSource("getLogPropsWithReqId")

@@ -57,7 +57,11 @@ public class HeaderProviderUnitTest extends BaseTest {
 
         String headerValue3 = RandomString.make();
 
-        LoggingProperties logProps = LoggingProperties.builder().maskedHeaders(headerName0, headerName1).build();
+        String notExistingHeaderName = RandomString.make();
+
+        LoggingProperties logProps = LoggingProperties.builder()
+                .maskedHeaders(headerName0, headerName1, notExistingHeaderName)
+                .build();
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add(headerName0, headerValue0);
@@ -78,7 +82,9 @@ public class HeaderProviderUnitTest extends BaseTest {
                 () -> assertTrue(actual.contains(headerName1 + "=" + DEFAULT_MASK)),
 
                 () -> assertFalse(actual.contains(headerName0 + "=" + headerValue3)),
-                () -> assertTrue(actual.contains(headerName2 + "=" + headerValue2))
+                () -> assertTrue(actual.contains(headerName2 + "=" + headerValue2)),
+
+                () -> assertFalse(actual.contains(notExistingHeaderName))
         );
     }
 }

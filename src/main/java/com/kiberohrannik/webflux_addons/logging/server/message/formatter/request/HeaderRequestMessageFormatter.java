@@ -3,7 +3,6 @@ package com.kiberohrannik.webflux_addons.logging.server.message.formatter.reques
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

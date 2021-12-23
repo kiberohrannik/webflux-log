@@ -1,22 +1,11 @@
 package com.kiberohrannik.webflux_addons.logging.server;
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
-import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
-import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultServerRequestLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultServerResponseLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultTimeElapsedLogger;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ReqIdMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.CookieRequestMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.HeaderRequestMessageFormatter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.server.WebFilter;
-
-import java.util.List;
 
 @EnableWebFlux
 @SpringBootApplication
@@ -35,6 +24,6 @@ public class TempApp {
                 .logBody(true)
                 .build();
 
-        return ServerLoggingFilterFactory.defaultFilter(props);
+        return ServerLoggingFilterFactory.defaultFilter(props, props);
     }
 }

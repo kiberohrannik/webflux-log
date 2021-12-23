@@ -3,7 +3,6 @@ package com.kiberohrannik.webflux_addons.logging.client.response.message.formatt
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
 import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
-import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 public class CookieMessageFormatter implements ResponseDataMessageFormatter {

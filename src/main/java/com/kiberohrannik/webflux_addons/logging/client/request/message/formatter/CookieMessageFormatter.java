@@ -2,14 +2,12 @@ package com.kiberohrannik.webflux_addons.logging.client.request.message.formatte
 
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
 public class CookieMessageFormatter implements RequestDataMessageFormatter {
 
-    private final CookieProvider provider;
+    private final CookieProvider provider = new CookieProvider();
 
 
     @Override

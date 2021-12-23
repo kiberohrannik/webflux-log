@@ -1,10 +1,10 @@
-package com.kiberohrannik.webflux_addons.logging.client.response.filter;
+package com.kiberohrannik.webflux_addons.logging.client.request.filter;
 
 import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
-import com.kiberohrannik.webflux_addons.logging.client.response.message.BaseResponseMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
-import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.*;
+import com.kiberohrannik.webflux_addons.logging.client.request.message.BaseRequestMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.request.message.RequestMessageCreator;
+import com.kiberohrannik.webflux_addons.logging.client.request.message.formatter.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 
@@ -13,22 +13,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
-public class LogResponseFilterFactoryUnitTest extends BaseTest {
+public class ClientRequestLoggingFilterFactoryUnitTest extends BaseTest {
 
     @Test
     void createDefaultFilter() {
         LoggingProperties logProps = LoggingProperties.builder().build();
 
-        ExchangeFilterFunction filterFunction = LogResponseFilterFactory.defaultFilter(logProps);
-        assertTrue(filterFunction instanceof LogResponseFilter);
+        ExchangeFilterFunction filterFunction = ClientRequestLoggingFilterFactory.defaultFilter(logProps);
+        assertTrue(filterFunction instanceof ClientRequestLoggingFilter);
 
-        LogResponseFilter logFilter = (LogResponseFilter) filterFunction;
+        ClientRequestLoggingFilter logFilter = (ClientRequestLoggingFilter) filterFunction;
 
-        ResponseMessageCreator messageCreator = (ResponseMessageCreator) getField(logFilter, "messageCreator");
-        assertTrue(messageCreator instanceof BaseResponseMessageCreator);
+        RequestMessageCreator messageCreator = (RequestMessageCreator) getField(logFilter, "messageCreator");
+        assertTrue(messageCreator instanceof BaseRequestMessageCreator);
 
-        List<ResponseDataMessageFormatter> messageFormatters =
-                (List<ResponseDataMessageFormatter>) getField(messageCreator, "messageFormatters");
+        List<RequestDataMessageFormatter> messageFormatters =
+                (List<RequestDataMessageFormatter>) getField(messageCreator, "messageFormatters");
 
         assertNotNull(messageFormatters);
         assertEquals(4, messageFormatters.size());
