@@ -1,7 +1,0 @@
-POST http://localhost:8080/test/endpoint
-Accept: application/json
-Content-Type: application/json
-Request-ID: vfmosbmgkrow[bmg
-Authorization: sid 211126pbs1nacnju9vib
-
-{"limitTypeWh":"CREDIT", "presenceStatus":"EXIST", "minDateAdded":"20-10-2021", "maxDateAdded":"03-12-2021"}

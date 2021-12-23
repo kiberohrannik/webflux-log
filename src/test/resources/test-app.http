@@ -1,0 +1,13 @@
+POST http://localhost:8080/test/endpoint
+Accept: application/json
+Content-Type: application/json
+Request-ID: req-ID
+Authorization: sid 211126pbs1nacnju9vib
+Cookie: cookieName=coooooookie
+
+{
+  "someValue": "TEST_VAL",
+  "another": "anything",
+  "count": 11,
+  "maxDateAdded": "03-12-2021"
+}

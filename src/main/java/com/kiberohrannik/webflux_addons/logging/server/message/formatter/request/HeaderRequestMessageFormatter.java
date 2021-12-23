@@ -18,6 +18,7 @@ public final class HeaderRequestMessageFormatter implements ServerMessageFormatt
         if (logProps.isLogHeaders()) {
             MultiValueMap<String, String> headersToLog = new LinkedMultiValueMap<>(exchange.getRequest().getHeaders());
             headersToLog.remove(HttpHeaders.COOKIE);
+            headersToLog.remove(HttpHeaders.COOKIE.toLowerCase());
 
             return source.concat(provider.createMessage(headersToLog, logProps));
         }
