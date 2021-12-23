@@ -5,6 +5,7 @@ import com.kiberohrannik.webflux_addons.logging.client.LoggingUtils;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class HeaderProvider {
 
@@ -22,8 +23,19 @@ public final class HeaderProvider {
 
     private void setMask(MultiValueMap<String, String> headers, String[] headerNames) {
         for (String maskedHeaderName : headerNames) {
-            if (headers.getFirst(maskedHeaderName) != null) {
-                headers.put(maskedHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
+            List<String> values = headers.get(maskedHeaderName);
+
+            if (values != null && !values.isEmpty()) {
+                if (values.size() == 1) {
+                    headers.put(maskedHeaderName, List.of(LoggingUtils.DEFAULT_MASK));
+                    return;
+                }
+
+                List<String> masked = values.stream()
+                        .map(value -> LoggingUtils.DEFAULT_MASK)
+                        .collect(Collectors.toList());
+
+                headers.put(maskedHeaderName, masked);
             }
         }
     }

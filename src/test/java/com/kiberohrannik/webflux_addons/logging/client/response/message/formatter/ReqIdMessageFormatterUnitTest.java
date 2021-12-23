@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import reactor.core.publisher.Mono;
 
-import static com.kiberohrannik.webflux_addons.logging.client.util.TestUtils.formatToLoggedReqId;
+import static com.kiberohrannik.webflux_addons.logging.util.TestUtils.formatToLoggedReqId;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ReqIdMessageFormatterUnitTest extends BaseTest {

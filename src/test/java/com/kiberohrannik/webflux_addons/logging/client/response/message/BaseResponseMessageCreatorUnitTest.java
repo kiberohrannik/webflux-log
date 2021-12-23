@@ -5,7 +5,7 @@ import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.CookieMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.HeaderMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ReqIdMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.client.util.TestUtils;
+import com.kiberohrannik.webflux_addons.logging.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

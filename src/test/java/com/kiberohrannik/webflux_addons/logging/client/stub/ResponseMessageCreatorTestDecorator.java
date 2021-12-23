@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static com.kiberohrannik.webflux_addons.logging.client.util.TestUtils.formatToLoggedReqId;
+import static com.kiberohrannik.webflux_addons.logging.util.TestUtils.formatToLoggedReqId;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
