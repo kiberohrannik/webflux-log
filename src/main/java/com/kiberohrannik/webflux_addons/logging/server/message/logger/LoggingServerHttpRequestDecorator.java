@@ -1,13 +1,17 @@
 package com.kiberohrannik.webflux_addons.logging.server.message.logger;
 
 import com.kiberohrannik.webflux_addons.logging.provider.BodyProvider;
+import com.kiberohrannik.webflux_addons.logging.server.exception.DataBufferCopyingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
+import org.springframework.util.FastByteArrayOutputStream;
 import reactor.core.publisher.Flux;
+
+import java.io.IOException;
+import java.nio.channels.Channels;
 
 public class LoggingServerHttpRequestDecorator extends ServerHttpRequestDecorator {
 
@@ -23,25 +27,34 @@ public class LoggingServerHttpRequestDecorator extends ServerHttpRequestDecorato
         logMessage = sourceLogMessage;
     }
 
-    //FIXME refactor - USE FastByteArrayOutputStream as in LoggingServerHttpResponseDecorator
 
     @Override
     public Flux<DataBuffer> getBody() {
         return super.getBody()
                 .switchIfEmpty(
-                        Flux.just(DefaultDataBufferFactory.sharedInstance.allocateBuffer())
-                                .doOnNext(dataBuffer -> {
-                                    String bodyMessage = provider.createBodyMessage(dataBuffer);
-                                    log.info(logMessage.concat(bodyMessage));
+                        Flux.<DataBuffer>empty()
+                                .doOnComplete(() -> {
+                                    String fullBodyMessage = provider.createEmptyBodyMessage();
+                                    log.info(logMessage.concat(fullBodyMessage));
                                 })
-                                .skip(1)
                 )
-
-//                .defaultIfEmpty(DefaultDataBufferFactory.sharedInstance.allocateBuffer())
-
                 .doOnNext(dataBuffer -> {
-                    String bodyMessage = provider.createBodyMessage(dataBuffer);
-                    log.info(logMessage.concat(bodyMessage));
+                    String fullBodyMessage = provider.createBodyMessage(copyBodyBuffer(dataBuffer));
+                    log.info(logMessage.concat(fullBodyMessage));
                 });
+    }
+
+
+    private FastByteArrayOutputStream copyBodyBuffer(DataBuffer buffer) {
+        try {
+            FastByteArrayOutputStream bodyStream = new FastByteArrayOutputStream();
+            Channels.newChannel(bodyStream)
+                    .write(buffer.asByteBuffer().asReadOnlyBuffer());
+
+            return bodyStream;
+
+        } catch (IOException e) {
+            throw new DataBufferCopyingException(e);
+        }
     }
 }

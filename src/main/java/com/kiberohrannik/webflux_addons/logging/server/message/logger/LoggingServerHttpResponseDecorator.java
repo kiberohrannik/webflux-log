@@ -1,6 +1,7 @@
 package com.kiberohrannik.webflux_addons.logging.server.message.logger;
 
 import com.kiberohrannik.webflux_addons.logging.provider.BodyProvider;
+import com.kiberohrannik.webflux_addons.logging.server.exception.DataBufferCopyingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.reactivestreams.Publisher;
@@ -21,67 +22,49 @@ public class LoggingServerHttpResponseDecorator extends ServerHttpResponseDecora
     private final String logMessage;
 
     private final BodyProvider provider = new BodyProvider();
-
-    private final FastByteArrayOutputStream fastByteArrayOutputStream;
+    private final FastByteArrayOutputStream bodyOutputStream = new FastByteArrayOutputStream();
 
 
     public LoggingServerHttpResponseDecorator(ServerHttpResponse delegate, String sourceLogMessage) {
         super(delegate);
         logMessage = sourceLogMessage;
 
-        fastByteArrayOutputStream = new FastByteArrayOutputStream();
-
         delegate.beforeCommit(() -> {
-            log.info(logMessage + "  BODY:   " + fastByteArrayOutputStream.toString());
+            String fullLogMessage = logMessage.concat(provider.createBodyMessage(bodyOutputStream));
+            log.info(fullLogMessage);
 
-//            log.info(fastByteArrayOutputStream.toString());
             return Mono.empty();
         });
     }
 
 
-//    @Override
-//    public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-//        Mono<DataBuffer> buffer = Mono.from(body);
-//
-//        return super.writeWith(
-//                buffer.doOnNext(dataBuffer -> {
-//                    String bodyMessage = provider.createBodyMessage(dataBuffer);
-//
-//                    readBuffer(fastByteArrayOutputStream, dataBuffer);
-//
-//                    log.info(logMessage.concat(bodyMessage));
-//                }));
-//    }
-
     @Override
     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-        Flux<DataBuffer> buffer = Flux.from(body)
-                .map(dataBuffer -> {
-                    readBuffer(fastByteArrayOutputStream, dataBuffer);
-                    return dataBuffer;
-                });
+        Flux<DataBuffer> bodyBufferWrapper = Flux.from(body)
+                .map(dataBuffer -> copyBodyBuffer(bodyOutputStream, dataBuffer));
 
-        return super.writeWith(buffer);
+        return super.writeWith(bodyBufferWrapper);
     }
 
     @Override
     public Mono<Void> writeAndFlushWith(Publisher<? extends Publisher<? extends DataBuffer>> body) {
-        return super.writeAndFlushWith(Flux.from(body).map(publisher ->
-                Flux.from(publisher).map(buffer ->
-                {
-                    readBuffer(fastByteArrayOutputStream, buffer);
-                    return buffer;
-                })));
+        Flux<Flux<DataBuffer>> bodyBufferWrapper = Flux.from(body)
+                .map(publisher -> Flux.from(publisher)
+                        .map(buffer -> copyBodyBuffer(bodyOutputStream, buffer)));
+
+        return super.writeAndFlushWith(bodyBufferWrapper);
     }
 
-    private void readBuffer(FastByteArrayOutputStream fastByteArrayOutputStream, DataBuffer buffer) {
+
+    private DataBuffer copyBodyBuffer(FastByteArrayOutputStream bodyStream, DataBuffer buffer) {
         try {
-            Channels.newChannel(fastByteArrayOutputStream)
+            Channels.newChannel(bodyStream)
                     .write(buffer.asByteBuffer().asReadOnlyBuffer());
 
+            return buffer;
+
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DataBufferCopyingException(e);
         }
     }
 }
