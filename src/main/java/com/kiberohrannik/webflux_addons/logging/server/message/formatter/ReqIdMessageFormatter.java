@@ -11,8 +11,6 @@ public final class ReqIdMessageFormatter implements ServerMessageFormatter {
 
     @Override
     public String addData(ServerWebExchange exchange, LoggingProperties logProps, String source) {
-        return logProps.isLogRequestId()
-                ? source.concat(provider.createMessage(exchange.getLogPrefix(), logProps))
-                : source;
+        return provider.createFromLogPrefix(exchange.getLogPrefix(), logProps, source);
     }
 }

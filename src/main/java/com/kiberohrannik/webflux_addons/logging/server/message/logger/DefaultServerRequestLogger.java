@@ -28,12 +28,10 @@ public final class DefaultServerRequestLogger implements ServerRequestLogger {
             baseMessage = formatter.addData(exchange, loggingProperties, baseMessage);
         }
 
-        if (loggingProperties.isLogBody()) {
-            return new LoggingServerHttpRequestDecorator(exchange.getRequest(), baseMessage);
+        log.info(baseMessage);
 
-        } else {
-            log.info(baseMessage);
-            return exchange.getRequest();
-        }
+        return loggingProperties.isLogBody()
+                ? new LoggingServerHttpRequestDecorator(exchange.getRequest(), loggingProperties)
+                : exchange.getRequest();
     }
 }

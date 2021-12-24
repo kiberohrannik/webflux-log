@@ -82,7 +82,7 @@ public class BaseIntegrationTest extends BaseTest {
         }
     }
 
-//    @RestController
+    @RestController
     public static class TestController {
 
         @PostMapping("/test/endpoint")

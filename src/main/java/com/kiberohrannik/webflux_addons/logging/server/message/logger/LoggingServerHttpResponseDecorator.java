@@ -30,7 +30,7 @@ public class LoggingServerHttpResponseDecorator extends ServerHttpResponseDecora
         logMessage = sourceLogMessage;
 
         delegate.beforeCommit(() -> {
-            String fullLogMessage = logMessage.concat(provider.createBodyMessage(bodyOutputStream));
+            String fullLogMessage = logMessage.concat(provider.createWithBody(bodyOutputStream));
             log.info(fullLogMessage);
 
             return Mono.empty();

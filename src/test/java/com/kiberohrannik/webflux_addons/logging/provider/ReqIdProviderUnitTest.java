@@ -19,7 +19,7 @@ public class ReqIdProviderUnitTest extends BaseTest {
 
         LoggingProperties logProps = LoggingProperties.builder().build();
 
-        String actual = provider.createMessage(logPrefix, logProps);
+        String actual = provider.createFromLogId(logPrefix, logProps);
         log.info(actual);
 
         assertEquals(actual, " REQ-ID: [ " + reqId + " ]");
@@ -33,7 +33,7 @@ public class ReqIdProviderUnitTest extends BaseTest {
 
         LoggingProperties logProps = LoggingProperties.builder().build();
 
-        String actual = provider.createMessage(logPrefix, logProps);
+        String actual = provider.createFromLogId(logPrefix, logProps);
         log.info(actual);
 
         assertEquals(actual, " REQ-ID: [ " + reqId0 + "[" + reqId1 + "] ]");
@@ -47,7 +47,7 @@ public class ReqIdProviderUnitTest extends BaseTest {
 
         LoggingProperties logProps = LoggingProperties.builder().requestIdPrefix(reqIdPrefix).build();
 
-        String actual = provider.createMessage(logPrefix, logProps);
+        String actual = provider.createFromLogId(logPrefix, logProps);
         log.info(actual);
 
         assertEquals(actual, " REQ-ID: [ " + reqIdPrefix + "_" + reqId + " ]");

@@ -14,10 +14,6 @@ public class ReqIdMessageFormatter implements RequestDataMessageFormatter {
 
     @Override
     public Mono<String> addData(ClientRequest request, LoggingProperties logProps, Mono<String> source) {
-        if (logProps.isLogRequestId()) {
-            return source.map(message -> message.concat(provider.createMessage(request.logPrefix(), logProps)));
-        }
-
-        return source;
+        return source.map(message -> provider.createFromLogPrefix(request.logPrefix(), logProps, message));
     }
 }

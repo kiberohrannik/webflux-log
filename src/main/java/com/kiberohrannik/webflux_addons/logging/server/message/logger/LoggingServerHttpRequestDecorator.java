@@ -1,6 +1,8 @@
 package com.kiberohrannik.webflux_addons.logging.server.message.logger;
 
+import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.BodyProvider;
+import com.kiberohrannik.webflux_addons.logging.provider.ReqIdProvider;
 import com.kiberohrannik.webflux_addons.logging.server.exception.DataBufferCopyingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,30 +19,25 @@ public class LoggingServerHttpRequestDecorator extends ServerHttpRequestDecorato
 
     private static final Log log = LogFactory.getLog(LoggingServerHttpRequestDecorator.class);
 
-    private final String logMessage;
+    private final BodyProvider bodyProvider = new BodyProvider();
+    private final String reqIdMessage;
 
-    private final BodyProvider provider = new BodyProvider();
 
-
-    public LoggingServerHttpRequestDecorator(ServerHttpRequest delegate, String sourceLogMessage) {
+    public LoggingServerHttpRequestDecorator(ServerHttpRequest delegate, LoggingProperties loggingProperties) {
         super(delegate);
-        logMessage = sourceLogMessage;
+        reqIdMessage = new ReqIdProvider().createFromLogId(delegate.getId(), loggingProperties);
     }
 
 
     @Override
     public Flux<DataBuffer> getBody() {
         return super.getBody()
-                .switchIfEmpty(
-                        Flux.<DataBuffer>empty()
-                                .doOnComplete(() -> {
-                                    String fullBodyMessage = provider.createEmptyBodyMessage();
-                                    log.info(logMessage.concat(fullBodyMessage));
-                                })
-                )
+                .switchIfEmpty(Flux.<DataBuffer>empty()
+                        .doOnComplete(() -> log.info(reqIdMessage.concat(bodyProvider.createWithEmptyBody()))))
+
                 .doOnNext(dataBuffer -> {
-                    String fullBodyMessage = provider.createBodyMessage(copyBodyBuffer(dataBuffer));
-                    log.info(logMessage.concat(fullBodyMessage));
+                    String fullBodyMessage = bodyProvider.createWithBody(copyBodyBuffer(dataBuffer));
+                    log.info(reqIdMessage.concat(fullBodyMessage));
                 });
     }
 

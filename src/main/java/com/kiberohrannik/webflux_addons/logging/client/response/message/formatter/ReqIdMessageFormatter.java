@@ -12,11 +12,10 @@ public class ReqIdMessageFormatter implements ResponseDataMessageFormatter {
 
     @Override
     public Mono<ResponseData> addData(LoggingProperties logProps, Mono<ResponseData> source) {
-        if (logProps.isLogRequestId()) {
-            return source.map(message ->
-                    message.addToLogs(provider.createMessage(message.getResponse().logPrefix(), logProps)));
-        }
-
-        return source;
+        return source.map(data -> {
+            String msg = provider.createFromLogPrefix(data.getResponse().logPrefix(), logProps, data.getLogMessage());
+            data.setLogMessage(msg);
+            return data;
+        });
     }
 }

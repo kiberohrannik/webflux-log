@@ -20,9 +20,9 @@ public final class DefaultTimeElapsedLogger implements TimeElapsedLogger {
 
     @Override
     public void log(long startTimeMillis, String logPrefix) {
-        String reqIdMessage = reqIdProvider.createMessage(logPrefix, loggingProperties);
+        String reqIdMessage = reqIdProvider.createFromLogPrefix(logPrefix, loggingProperties, "").trim();
         String elapsedTimeMessage = timeElapsedProvider.createMessage(System.currentTimeMillis() - startTimeMillis);
 
-        log.info(reqIdMessage.trim().concat(elapsedTimeMessage));
+        log.info(reqIdMessage.concat(elapsedTimeMessage));
     }
 }
