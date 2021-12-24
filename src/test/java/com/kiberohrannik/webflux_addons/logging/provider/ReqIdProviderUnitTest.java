@@ -17,9 +17,9 @@ public class ReqIdProviderUnitTest extends BaseTest {
         String reqId = RandomString.make();
         String logPrefix = "[ " + reqId + " ]";
 
-        LoggingProperties logProps = LoggingProperties.builder().build();
+        LoggingProperties logProps = LoggingProperties.builder().logRequestId(true).build();
 
-        String actual = provider.createFromLogId(logPrefix, logProps);
+        String actual = provider.createFromLogPrefix(logPrefix, logProps, "");
         log.info(actual);
 
         assertEquals(actual, " REQ-ID: [ " + reqId + " ]");
@@ -31,9 +31,9 @@ public class ReqIdProviderUnitTest extends BaseTest {
         String reqId1 = RandomString.make();
         String logPrefix = "[ " + reqId0 + " ]" + "[ " + reqId1 + " ]";
 
-        LoggingProperties logProps = LoggingProperties.builder().build();
+        LoggingProperties logProps = LoggingProperties.builder().logRequestId(true).build();
 
-        String actual = provider.createFromLogId(logPrefix, logProps);
+        String actual = provider.createFromLogPrefix(logPrefix, logProps, "");
         log.info(actual);
 
         assertEquals(actual, " REQ-ID: [ " + reqId0 + "[" + reqId1 + "] ]");
@@ -45,9 +45,12 @@ public class ReqIdProviderUnitTest extends BaseTest {
         String logPrefix = "[ " + reqId + " ]";
         String reqIdPrefix = RandomString.make();
 
-        LoggingProperties logProps = LoggingProperties.builder().requestIdPrefix(reqIdPrefix).build();
+        LoggingProperties logProps = LoggingProperties.builder()
+                .logRequestId(true)
+                .requestIdPrefix(reqIdPrefix)
+                .build();
 
-        String actual = provider.createFromLogId(logPrefix, logProps);
+        String actual = provider.createFromLogPrefix(logPrefix, logProps, "");
         log.info(actual);
 
         assertEquals(actual, " REQ-ID: [ " + reqIdPrefix + "_" + reqId + " ]");

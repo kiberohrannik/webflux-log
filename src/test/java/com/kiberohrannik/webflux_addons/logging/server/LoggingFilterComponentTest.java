@@ -4,6 +4,7 @@ import com.kiberohrannik.webflux_addons.logging.base.BaseTest;
 import com.kiberohrannik.webflux_addons.logging.server.base.BaseIntegrationTest;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
@@ -24,6 +25,7 @@ public class LoggingFilterComponentTest extends BaseTest {
     private WebTestClient testClient;
 
 
+    @Disabled
     @Test
     void test() {
         String reqBody = "{\"some\":\"body\"}";
