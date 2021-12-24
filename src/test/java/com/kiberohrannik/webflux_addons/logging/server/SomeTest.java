@@ -35,7 +35,7 @@ public class SomeTest extends BaseIntegrationTest {
                 .cookie("Cookie-1", RandomString.make(10))
                 .cookie("Cookie-3", RandomString.make(5))
 
-                .bodyValue(body)
+//                .bodyValue(body)
 
                 .retrieve()
                 .bodyToMono(String.class)
