@@ -14,23 +14,24 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.nio.channels.Channels;
+import java.util.function.Supplier;
 
 public class LoggingServerHttpResponseDecorator extends ServerHttpResponseDecorator {
 
     private static final Log log = LogFactory.getLog(LoggingServerHttpResponseDecorator.class);
 
-    private final String logMessage;
+//    private final String logMessage;
 
     private final BodyProvider provider = new BodyProvider();
     private final FastByteArrayOutputStream bodyOutputStream = new FastByteArrayOutputStream();
 
 
-    public LoggingServerHttpResponseDecorator(ServerHttpResponse delegate, String sourceLogMessage) {
+    public LoggingServerHttpResponseDecorator(ServerHttpResponse delegate, Supplier<String> sourceLogMessage) {
         super(delegate);
-        logMessage = sourceLogMessage;
+//        logMessage = sourceLogMessage;
 
         delegate.beforeCommit(() -> {
-            String fullLogMessage = logMessage.concat(provider.createWithBody(bodyOutputStream));
+            String fullLogMessage = sourceLogMessage.get().concat(provider.createWithBody(bodyOutputStream));
             log.info(fullLogMessage);
 
             return Mono.empty();

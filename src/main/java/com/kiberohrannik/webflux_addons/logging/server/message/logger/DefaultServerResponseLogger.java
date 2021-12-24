@@ -10,6 +10,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public final class DefaultServerResponseLogger implements ServerResponseLogger {
@@ -24,18 +25,23 @@ public final class DefaultServerResponseLogger implements ServerResponseLogger {
 
     @Override
     public ServerHttpResponse log(ServerWebExchange exchange, long timeElapsedMillis) {
-        String baseMessage = "RESPONSE:"
-                + httpStatusProvider.createMessage(exchange.getResponse().getRawStatusCode());
+        Supplier<String> stringSupplier = () -> {
 
-        for (ServerMessageFormatter formatter : serverMessageFormatters) {
-            baseMessage = formatter.addData(exchange, loggingProperties, baseMessage);
-        }
+            String baseMessage = "RESPONSE:"
+                    + httpStatusProvider.createMessage(exchange.getResponse().getRawStatusCode());
+
+            for (ServerMessageFormatter formatter : serverMessageFormatters) {
+                baseMessage = formatter.addData(exchange, loggingProperties, baseMessage);
+            }
+
+            return baseMessage;
+        };
 
         if (loggingProperties.isLogBody()) {
-            return new LoggingServerHttpResponseDecorator(exchange.getResponse(), baseMessage);
+            return new LoggingServerHttpResponseDecorator(exchange.getResponse(), stringSupplier);
 
         } else {
-            log.info(baseMessage);
+            log.info(stringSupplier.get());
             return exchange.getResponse();
         }
     }
