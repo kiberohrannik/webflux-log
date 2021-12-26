@@ -4,7 +4,6 @@ import com.kiberohrannik.webflux_addons.logging.client.LoggingProperties;
 import com.kiberohrannik.webflux_addons.logging.provider.HttpStatusProvider;
 import com.kiberohrannik.webflux_addons.logging.provider.TimeElapsedProvider;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.ServerMessageFormatter;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -14,16 +13,22 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.function.Supplier;
 
-@RequiredArgsConstructor
 public final class DefaultServerResponseLogger implements ServerResponseLogger {
 
     private static final Log log = LogFactory.getLog(DefaultServerResponseLogger.class);
 
     private final LoggingProperties loggingProperties;
-    private final List<ServerMessageFormatter> serverMessageFormatters;
+    private final List<ServerMessageFormatter> messageFormatters;
 
     private final HttpStatusProvider statusProvider = new HttpStatusProvider();
     private final TimeElapsedProvider timeProvider = new TimeElapsedProvider();
+
+
+    public DefaultServerResponseLogger(LoggingProperties loggingProperties,
+                                       List<ServerMessageFormatter> messageFormatters) {
+        this.loggingProperties = loggingProperties;
+        this.messageFormatters = messageFormatters;
+    }
 
 
     @Override
@@ -35,7 +40,7 @@ public final class DefaultServerResponseLogger implements ServerResponseLogger {
 
         } else {
             exchange.getResponse()
-                    .beforeCommit(() -> Mono.<Void>fromRunnable(() -> log.info(baseMessageSupplier.get())));
+                    .beforeCommit(() -> Mono.fromRunnable(() -> log.info(baseMessageSupplier.get())));
             return exchange.getResponse();
         }
     }
@@ -46,7 +51,7 @@ public final class DefaultServerResponseLogger implements ServerResponseLogger {
             String status = statusProvider.createMessage(exchange.getResponse().getRawStatusCode());
 
             String dataMessage = "";
-            for (ServerMessageFormatter formatter : serverMessageFormatters) {
+            for (ServerMessageFormatter formatter : messageFormatters) {
                 dataMessage = formatter.addData(exchange, loggingProperties, dataMessage);
             }
 

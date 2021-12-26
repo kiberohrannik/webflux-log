@@ -11,11 +11,9 @@ import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultSer
 import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultServerResponseLogger;
 import com.kiberohrannik.webflux_addons.logging.server.message.logger.ServerRequestLogger;
 import com.kiberohrannik.webflux_addons.logging.server.message.logger.ServerResponseLogger;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 public class ServerLoggingFilterFactory {
 
     public static LoggingFilter defaultFilter(LoggingProperties requestLogProps,

@@ -2,7 +2,6 @@ package com.kiberohrannik.webflux_addons.logging.client.response.filter;
 
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseData;
 import com.kiberohrannik.webflux_addons.logging.client.response.message.ResponseMessageCreator;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.reactive.function.client.ClientRequest;
@@ -11,11 +10,15 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
 public class ClientResponseLoggingFilter implements ExchangeFilterFunction {
 
     private static final Log log = LogFactory.getLog(ClientResponseLoggingFilter.class);
     private final ResponseMessageCreator messageCreator;
+
+
+    public ClientResponseLoggingFilter(ResponseMessageCreator messageCreator) {
+        this.messageCreator = messageCreator;
+    }
 
 
     @Override
