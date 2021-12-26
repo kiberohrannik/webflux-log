@@ -22,7 +22,7 @@ public class ClientResponseLoggingFilterFactory {
         return new ClientResponseLoggingFilter(new BaseResponseMessageCreator(loggingProperties, formatters));
     }
 
-    public static ExchangeFilterFunction defaultFilter(ResponseMessageCreator responseMessageCreator) {
+    public static ExchangeFilterFunction customFilter(ResponseMessageCreator responseMessageCreator) {
         return new ClientResponseLoggingFilter(responseMessageCreator);
     }
 }

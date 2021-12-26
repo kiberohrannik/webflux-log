@@ -12,8 +12,6 @@ import com.kiberohrannik.webflux_addons.logging.client.response.message.Response
 import com.kiberohrannik.webflux_addons.logging.client.response.message.formatter.ResponseDataMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.client.stub.RequestMessageCreatorTestDecorator;
 import com.kiberohrannik.webflux_addons.logging.client.stub.ResponseMessageCreatorTestDecorator;
-import com.kiberohrannik.webflux_addons.logging.provider.CookieProvider;
-import com.kiberohrannik.webflux_addons.logging.provider.HeaderProvider;
 import org.springframework.lang.Nullable;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -45,7 +43,7 @@ public abstract class BaseComponentTest extends BaseTest {
         RequestMessageCreatorTestDecorator testDecorator = new RequestMessageCreatorTestDecorator(
                 msgCreator, logProperties, requestBody);
 
-        ExchangeFilterFunction logRequestFilter = ClientRequestLoggingFilterFactory.defaultFilter(testDecorator);
+        ExchangeFilterFunction logRequestFilter = ClientRequestLoggingFilterFactory.customFilter(testDecorator);
 
         return WebClient.builder()
                 .filter(logRequestFilter)
@@ -60,7 +58,7 @@ public abstract class BaseComponentTest extends BaseTest {
         ResponseMessageCreatorTestDecorator testDecorator = new ResponseMessageCreatorTestDecorator(
                 msgCreator, logProperties, responseBody);
 
-        ExchangeFilterFunction logResponseFilter = ClientResponseLoggingFilterFactory.defaultFilter(testDecorator);
+        ExchangeFilterFunction logResponseFilter = ClientResponseLoggingFilterFactory.customFilter(testDecorator);
 
         return WebClient.builder()
                 .filter(logResponseFilter)

@@ -21,7 +21,7 @@ public class ClientRequestLoggingFilterFactory {
         return new ClientRequestLoggingFilter(new BaseRequestMessageCreator(loggingProperties, formatters));
     }
 
-    public static ExchangeFilterFunction defaultFilter(RequestMessageCreator requestMessageCreator) {
+    public static ExchangeFilterFunction customFilter(RequestMessageCreator requestMessageCreator) {
         return new ClientRequestLoggingFilter(requestMessageCreator);
     }
 }
