@@ -9,6 +9,11 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+/**
+ * {@link WebFilter} that performs logging of {@link ServerHttpRequest} and {@link ServerHttpResponse}.
+ * <p> It is recommended to set the LOWEST order to this filter.
+ * <p> See also {@link ServerRequestLogger}, {@link ServerResponseLogger},
+ */
 public class LoggingFilter implements WebFilter {
 
     private final ServerRequestLogger requestMessageCreator;
