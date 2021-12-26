@@ -151,4 +151,20 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>internal.releases</id>
+            <name>Nexus releases repository of DSI</name>
+            <url>${internal.repository}/content/repositories/releases/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+        <snapshotRepository>
+            <id>internal.snapshots</id>
+            <name>Nexus snapshot repository of DSI</name>
+            <url>${internal.repository}/content/repositories/snapshots/</url>
+            <uniqueVersion>true</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>

@@ -29,6 +29,6 @@ public class BodyMessageFormatter implements ResponseDataMessageFormatter {
     }
 
     private String formatMessage(String body, String source) {
-        return source.concat("\nBODY: [ ").concat(body).concat(" ]");
+        return source.concat(" BODY: [ ").concat(body).concat(" ]");
     }
 }

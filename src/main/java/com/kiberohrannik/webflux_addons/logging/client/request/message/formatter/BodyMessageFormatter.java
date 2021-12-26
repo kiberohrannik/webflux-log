@@ -22,6 +22,6 @@ public class BodyMessageFormatter implements RequestDataMessageFormatter {
     private Mono<String> addBody(ClientRequest request, String source) {
         return bodyExtractor.extractBody(request)
                 .switchIfEmpty(Mono.just(LoggingUtils.NO_BODY_MESSAGE))
-                .map(bodyStr -> source.concat("\nBODY: [ ").concat(bodyStr).concat(" ]"));
+                .map(bodyStr -> source.concat(" BODY: [ ").concat(bodyStr).concat(" ]"));
     }
 }
