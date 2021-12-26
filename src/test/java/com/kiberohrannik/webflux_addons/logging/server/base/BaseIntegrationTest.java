@@ -75,7 +75,7 @@ public class BaseIntegrationTest extends BaseTest {
                     .requestIdPrefix("TEST-REQ-ID")
                     .logHeaders(true)
                     .logCookies(true)
-//                    .logBody(true)
+                    .logBody(true)
                     .build();
 
             return ServerLoggingFilterFactory.defaultFilter(props, props);
