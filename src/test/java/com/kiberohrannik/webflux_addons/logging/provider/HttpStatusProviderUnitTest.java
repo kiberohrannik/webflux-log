@@ -19,7 +19,7 @@ public class HttpStatusProviderUnitTest extends BaseTest {
         String actual = provider.createMessage(nullStatus);
         log.info(actual);
 
-        assertEquals(actual, " STATUS: " + nullStatus);
+        assertEquals(" STATUS: " + nullStatus, actual);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class HttpStatusProviderUnitTest extends BaseTest {
         String actual = provider.createMessage(statusCode);
         log.info(actual);
 
-        assertEquals(actual, " STATUS: " + statusCode + " " + httpStatus.getReasonPhrase());
+        assertEquals(" STATUS: " + statusCode + " " + httpStatus.getReasonPhrase(), actual);
     }
 
     @Test
@@ -40,6 +40,6 @@ public class HttpStatusProviderUnitTest extends BaseTest {
         String actual = provider.createMessage(statusCode);
         log.info(actual);
 
-        assertEquals(actual, " STATUS: " + statusCode);
+        assertEquals(" STATUS: " + statusCode, actual);
     }
 }

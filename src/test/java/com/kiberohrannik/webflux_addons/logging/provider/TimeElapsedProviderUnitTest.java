@@ -20,7 +20,7 @@ public class TimeElapsedProviderUnitTest extends BaseTest {
         String actual = provider.createMessage(timeElapsedMillis);
         log.info(actual);
 
-        assertEquals(actual, " ELAPSED TIME: " + timeElapsedMillis + "ms");
+        assertEquals(" ELAPSED TIME: " + timeElapsedMillis + "ms", actual);
     }
 
     @Test
@@ -30,6 +30,6 @@ public class TimeElapsedProviderUnitTest extends BaseTest {
         String actual = provider.createMessage(timeElapsedMillis);
         log.info(actual);
 
-        assertEquals(actual, " ELAPSED TIME: " + TimeUnit.MILLISECONDS.toSeconds(timeElapsedMillis) + "s");
+        assertEquals(" ELAPSED TIME: " + TimeUnit.MILLISECONDS.toSeconds(timeElapsedMillis) + "s", actual);
     }
 }
