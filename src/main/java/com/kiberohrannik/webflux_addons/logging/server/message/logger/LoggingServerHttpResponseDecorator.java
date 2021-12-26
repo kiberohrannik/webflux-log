@@ -20,18 +20,17 @@ public class LoggingServerHttpResponseDecorator extends ServerHttpResponseDecora
 
     private static final Log log = LogFactory.getLog(LoggingServerHttpResponseDecorator.class);
 
-//    private final String logMessage;
-
     private final BodyProvider provider = new BodyProvider();
     private final FastByteArrayOutputStream bodyOutputStream = new FastByteArrayOutputStream();
 
 
     public LoggingServerHttpResponseDecorator(ServerHttpResponse delegate, Supplier<String> sourceLogMessage) {
         super(delegate);
-//        logMessage = sourceLogMessage;
 
         delegate.beforeCommit(() -> {
-            String fullLogMessage = sourceLogMessage.get().concat(provider.createWithBody(bodyOutputStream));
+            String bodyMessage = provider.createWithBody(bodyOutputStream);
+            String fullLogMessage = sourceLogMessage.get().concat(bodyMessage);
+
             log.info(fullLogMessage);
 
             return Mono.empty();

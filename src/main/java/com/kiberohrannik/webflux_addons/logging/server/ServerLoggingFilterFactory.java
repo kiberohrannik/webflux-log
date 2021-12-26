@@ -7,7 +7,10 @@ import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.request.HeaderRequestMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.response.CookieResponseMessageFormatter;
 import com.kiberohrannik.webflux_addons.logging.server.message.formatter.response.HeaderResponseMessageFormatter;
-import com.kiberohrannik.webflux_addons.logging.server.message.logger.*;
+import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultServerRequestLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.logger.DefaultServerResponseLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.logger.ServerRequestLogger;
+import com.kiberohrannik.webflux_addons.logging.server.message.logger.ServerResponseLogger;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -32,15 +35,13 @@ public class ServerLoggingFilterFactory {
 
         return new LoggingFilter(
                 new DefaultServerRequestLogger(requestLogProps, requestFormatters),
-                new DefaultServerResponseLogger(requestLogProps, responseFormatters),
-                new DefaultTimeElapsedLogger(requestLogProps)
+                new DefaultServerResponseLogger(responseLogProps, responseFormatters)
         );
     }
 
     public static LoggingFilter customFilter(ServerRequestLogger serverRequestLogger,
-                                             ServerResponseLogger serverResponseLogger,
-                                             TimeElapsedLogger timeElapsedLogger) {
+                                             ServerResponseLogger serverResponseLogger) {
 
-        return new LoggingFilter(serverRequestLogger, serverResponseLogger, timeElapsedLogger);
+        return new LoggingFilter(serverRequestLogger, serverResponseLogger);
     }
 }
