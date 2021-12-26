@@ -1,5 +1,6 @@
 package com.kiberohrannik.webflux_addons.logging.server.integration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kiberohrannik.webflux_addons.logging.server.base.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 public class LoggingFilterTomcatIntegrationTest extends BaseIntegrationTest {
 
     @Test
-    void logRequestResponse_usingTomcat() {
+    void logRequestResponse_usingTomcat() throws JsonProcessingException {
         verifyTestEndpointRequestSuccess();
     }
 

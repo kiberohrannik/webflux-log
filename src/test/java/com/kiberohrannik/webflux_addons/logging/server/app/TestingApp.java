@@ -10,7 +10,7 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 @EnableWebFlux
 @SpringBootApplication
 @ComponentScan(basePackageClasses = {
-        BaseIntegrationTest.TestController.class,
+        TestController.class,
         BaseIntegrationTest.LoggingFilterConfig.class,
 })
 @ActiveProfiles("test")

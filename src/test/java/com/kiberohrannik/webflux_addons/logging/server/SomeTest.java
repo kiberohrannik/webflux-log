@@ -1,7 +1,9 @@
 package com.kiberohrannik.webflux_addons.logging.server;
 
+import com.kiberohrannik.webflux_addons.logging.server.app.TestController;
 import com.kiberohrannik.webflux_addons.logging.server.base.BaseIntegrationTest;
 import net.bytebuddy.utility.RandomString;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -17,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         classes = SomeTest.NettyConfig.class)
 public class SomeTest extends BaseIntegrationTest {
 
+    @Disabled
     @Test
     void logRequestResponse_usingNetty() {
         String body = RandomString.make(40);
@@ -41,7 +44,7 @@ public class SomeTest extends BaseIntegrationTest {
                 .bodyToMono(String.class)
                 .block();
 
-        assertEquals(body + RESPONSE_PREFIX, result);
+        assertEquals(body + TestController.RESPONSE_PREFIX, result);
     }
 
 
