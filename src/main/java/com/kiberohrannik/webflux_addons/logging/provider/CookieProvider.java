@@ -7,8 +7,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.List;
-
 public final class CookieProvider {
 
     public String createClientRequestMessage(MultiValueMap<String, String> cookies, LoggingProperties props) {
@@ -26,10 +24,11 @@ public final class CookieProvider {
     public String createServerRequestMessage(MultiValueMap<String, HttpCookie> cookies, LoggingProperties props) {
         StringBuilder sb = new StringBuilder(" COOKIES: [ ");
 
-        if (props.getMaskedCookies() != null) {
-            setMaskInServerRequest(cookies, props.getMaskedCookies());
+        if (props.getMaskedCookies() == null) {
+            extractInServerRequest(cookies, sb);
+        } else {
+            extractInServerRequest(setMaskInServerRequest(cookies, props.getMaskedCookies()), sb);
         }
-        extractInServerRequest(cookies, sb);
 
         return sb.append("]").toString();
     }
@@ -38,9 +37,9 @@ public final class CookieProvider {
         StringBuilder sb = new StringBuilder(" COOKIES (Set-Cookie): [ ");
 
         if (props.getMaskedCookies() == null) {
-            this.extractInResponse(cookies, sb);
+            extractInResponse(cookies, sb);
         } else {
-            this.extractInResponse(setMaskInResponse(cookies, props.getMaskedCookies()), sb);
+            extractInResponse(setMaskInResponse(cookies, props.getMaskedCookies()), sb);
         }
 
         return sb.append("]").toString();
@@ -49,39 +48,30 @@ public final class CookieProvider {
 
     private MultiValueMap<String, String> setMaskInClientRequest(MultiValueMap<String, String> cookies,
                                                                  String[] cookiesToMask) {
-
-        MultiValueMap<String, String> cookiesToLog = new LinkedMultiValueMap<>(cookies);
-        for (String maskedName : cookiesToMask) {
-            if (cookiesToLog.getFirst(maskedName) != null) {
-                cookiesToLog.put(maskedName, List.of(LoggingUtils.DEFAULT_MASK));
-            }
-        }
-
-        return cookiesToLog;
+        return ProviderUtils.setMaskToValues(cookies, cookiesToMask, LoggingUtils.DEFAULT_MASK);
     }
 
-    private void setMaskInServerRequest(MultiValueMap<String, HttpCookie> cookies, String[] cookiesToMask) {
-        MultiValueMap<String, HttpCookie> cookiesToLog = new LinkedMultiValueMap<>(cookies);
+    private MultiValueMap<String, HttpCookie> setMaskInServerRequest(MultiValueMap<String, HttpCookie> cookies,
+                                                                     String[] cookiesToMask) {
 
-        for (String masked : cookiesToMask) {
-            if (cookiesToLog.getFirst(masked) != null) {
-                cookiesToLog.put(masked, List.of(new HttpCookie(masked, LoggingUtils.DEFAULT_MASK)));
-            }
+        MultiValueMap<String, HttpCookie> copiedMap = new LinkedMultiValueMap<>(cookies);
+
+        for (String maskedName : cookiesToMask) {
+            ProviderUtils.setMaskToValue(copiedMap, maskedName, new HttpCookie(maskedName, LoggingUtils.DEFAULT_MASK));
         }
+        return copiedMap;
     }
 
     private MultiValueMap<String, ResponseCookie> setMaskInResponse(MultiValueMap<String, ResponseCookie> cookies,
                                                                     String[] cookiesToMask) {
 
-        MultiValueMap<String, ResponseCookie> cookiesToLog = new LinkedMultiValueMap<>(cookies);
-        for (String maskedName : cookiesToMask) {
-            if (cookiesToLog.getFirst(maskedName) != null) {
-                ResponseCookie masked = ResponseCookie.from(maskedName, LoggingUtils.DEFAULT_MASK).build();
-                cookiesToLog.put(maskedName, List.of(masked));
-            }
-        }
+        MultiValueMap<String, ResponseCookie> copiedMap = new LinkedMultiValueMap<>(cookies);
 
-        return cookiesToLog;
+        for (String maskedName : cookiesToMask) {
+            ResponseCookie mask = ResponseCookie.from(maskedName, LoggingUtils.DEFAULT_MASK).build();
+            ProviderUtils.setMaskToValue(copiedMap, maskedName, mask);
+        }
+        return copiedMap;
     }
 
     private void extractInClientRequest(MultiValueMap<String, String> cookies, StringBuilder sb) {
@@ -96,6 +86,7 @@ public final class CookieProvider {
 
     private void extractInResponse(MultiValueMap<String, ResponseCookie> cookies, StringBuilder sb) {
         cookies.forEach((name, values) -> values
-                .forEach(responseCookie -> sb.append(" [").append(responseCookie).append("]").append(" ")));
+                .forEach(responseCookie ->
+                        sb.append(" [").append(responseCookie).append("]").append(" ")));
     }
 }
