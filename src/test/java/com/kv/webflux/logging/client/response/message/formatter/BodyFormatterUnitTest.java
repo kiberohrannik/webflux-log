@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BodyFormatterUnitTest extends BaseTest {
 
-    private final BodyFormatter formatter = new BodyFormatter();
+    private final BodyClientResponseFormatter formatter = new BodyClientResponseFormatter();
 
     private final String bodyStr = RandomString.make();
     private final ClientResponse response = ClientResponse.create(HttpStatus.BAD_REQUEST).body(bodyStr).build();

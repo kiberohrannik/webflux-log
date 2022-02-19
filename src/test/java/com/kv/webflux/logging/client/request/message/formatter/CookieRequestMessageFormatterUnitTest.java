@@ -27,7 +27,7 @@ public class CookieRequestMessageFormatterUnitTest extends BaseTest {
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
         LoggingProperties properties = LoggingProperties.builder().logCookies(false).build();
 
-        String result = formatter.addData(testRequest, properties).block();
+        String result = formatter.formatMessage(testRequest, properties);
         assertNotNull(result);
         assertEquals(EMPTY_MESSAGE, result);
     }
@@ -36,7 +36,7 @@ public class CookieRequestMessageFormatterUnitTest extends BaseTest {
     void addData_whenNeedLog_thenReturnWithCookies() {
         LoggingProperties properties = LoggingProperties.builder().logCookies(true).build();
 
-        String withCookies = formatter.addData(testRequest, properties).block();
+        String withCookies = formatter.formatMessage(testRequest, properties);
         assertNotNull(withCookies);
         assertAll(
                 () -> assertTrue(withCookies.contains("COOKIES:")),
@@ -54,7 +54,7 @@ public class CookieRequestMessageFormatterUnitTest extends BaseTest {
                 .maskedCookies("Session", "AbsentCookie321")
                 .build();
 
-        String withCookies = formatter.addData(testRequest, properties).block();
+        String withCookies = formatter.formatMessage(testRequest, properties);
         assertNotNull(withCookies);
         assertAll(
                 () -> assertTrue(withCookies.contains("COOKIES:")),

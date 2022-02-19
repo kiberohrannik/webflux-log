@@ -29,7 +29,7 @@ public class BodyFormatterUnitTest extends BaseTest {
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
         LoggingProperties properties = LoggingProperties.builder().logBody(false).build();
 
-        String result = formatter.addData(requestWithBody, properties).block();
+        String result = formatter.formatMessage(requestWithBody, properties).block();
         assertNotNull(result);
         assertEquals(EMPTY_MESSAGE, result);
     }
@@ -39,7 +39,7 @@ public class BodyFormatterUnitTest extends BaseTest {
         LoggingProperties properties = LoggingProperties.builder().logBody(true).build();
         ClientRequest requestNoBody = ClientRequest.create(HttpMethod.POST, URI.create("/someUri")).build();
 
-        String result = formatter.addData(requestNoBody, properties).block();
+        String result = formatter.formatMessage(requestNoBody, properties).block();
         assertNotNull(result);
         assertTrue(result.contains("BODY:"));
         assertTrue(result.contains(LoggingUtils.NO_BODY_MESSAGE));
@@ -49,7 +49,7 @@ public class BodyFormatterUnitTest extends BaseTest {
     void addData_whenNeedLog_thenReturnWithBody() {
         LoggingProperties properties = LoggingProperties.builder().logBody(true).build();
 
-        String withBody = formatter.addData(requestWithBody, properties).block();
+        String withBody = formatter.formatMessage(requestWithBody, properties).block();
         assertNotNull(withBody);
         assertTrue(withBody.contains("BODY:"));
         assertTrue(withBody.contains(bodyStr));

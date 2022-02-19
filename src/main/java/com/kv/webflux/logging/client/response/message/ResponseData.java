@@ -3,7 +3,7 @@ package com.kv.webflux.logging.client.response.message;
 import org.springframework.web.reactive.function.client.ClientResponse;
 
 
-public class ResponseData {
+public final class ResponseData {
 
     private final ClientResponse response;
     private String logMessage;
@@ -14,11 +14,6 @@ public class ResponseData {
         this.logMessage = logMessage;
     }
 
-
-    public ResponseData addToLogs(String logMessage) {
-        this.logMessage += logMessage;
-        return this;
-    }
 
     public ResponseData addFirst(String logMessage) {
         this.logMessage = logMessage + this.logMessage;
@@ -31,9 +26,5 @@ public class ResponseData {
 
     public String getLogMessage() {
         return logMessage;
-    }
-
-    public void setLogMessage(String logMessage) {
-        this.logMessage = logMessage;
     }
 }

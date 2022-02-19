@@ -3,15 +3,14 @@ package com.kv.webflux.logging.client.request.message.formatter;
 import com.kv.webflux.logging.client.LoggingProperties;
 import com.kv.webflux.logging.provider.HeaderProvider;
 import org.springframework.web.reactive.function.client.ClientRequest;
-import reactor.core.publisher.Mono;
 
-public class HeaderClientRequestFormatter implements RequestDataMessageFormatter {
+public class HeaderClientRequestFormatter implements RequestMetadataMessageFormatter {
 
     private final HeaderProvider provider = new HeaderProvider();
 
 
     @Override
-    public Mono<String> addData(ClientRequest request, LoggingProperties properties) {
-        return Mono.just(provider.createMessage(request.headers(), properties));
+    public String formatMessage(ClientRequest request, LoggingProperties properties) {
+        return provider.createMessage(request.headers(), properties);
     }
 }

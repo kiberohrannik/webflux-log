@@ -57,7 +57,7 @@ public class BaseRequestMessageCreatorUnitTest extends BaseTest {
                 .cookie("Session", "sid4567")
                 .build();
 
-        String result = requestMessageCreator.formatMessage(testRequest).block();
+        String result = requestMessageCreator.createMessage(testRequest).block();
 
         assertNotNull(result);
         assertTrue(result.contains("REQUEST:"));
@@ -68,8 +68,8 @@ public class BaseRequestMessageCreatorUnitTest extends BaseTest {
         assertTrue(result.contains(HttpHeaders.AUTHORIZATION + "=Some Auth"));
         assertTrue(result.contains("Session=sid4567"));
 
-        verify(reqIdFormatter).addData(testRequest, properties);
-        verify(headerFormatter).addData(testRequest, properties);
-        verify(cookieFormatter).addData(testRequest, properties);
+        verify(reqIdFormatter).formatMessage(testRequest, properties);
+        verify(headerFormatter).formatMessage(testRequest, properties);
+        verify(cookieFormatter).formatMessage(testRequest, properties);
     }
 }

@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface RequestMessageCreator {
 
-    Mono<String> formatMessage(ClientRequest request);
+    Mono<String> createMessage(ClientRequest request);
 }

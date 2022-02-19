@@ -27,15 +27,16 @@ public class ClientRequestLoggingFilterFactoryUnitTest extends BaseTest {
         RequestMessageCreator messageCreator = (RequestMessageCreator) getField(logFilter, "messageCreator");
         assertTrue(messageCreator instanceof BaseRequestMessageCreator);
 
-        List<RequestDataMessageFormatter> messageFormatters =
-                (List<RequestDataMessageFormatter>) getField(messageCreator, "formatters");
+        List<RequestMetadataMessageFormatter> metadataFormatters =
+                (List<RequestMetadataMessageFormatter>) getField(messageCreator, "metadataFormatters");
 
-        assertNotNull(messageFormatters);
-        assertEquals(4, messageFormatters.size());
+        assertNotNull(metadataFormatters);
+        assertEquals(3, metadataFormatters.size());
 
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof HeaderClientRequestFormatter));
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof CookieClientRequestFormatter));
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof ReqIdClientRequestFormatter));
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof BodyClientRequestFormatter));
+        assertTrue(metadataFormatters.stream().anyMatch(f -> f instanceof HeaderClientRequestFormatter));
+        assertTrue(metadataFormatters.stream().anyMatch(f -> f instanceof CookieClientRequestFormatter));
+        assertTrue(metadataFormatters.stream().anyMatch(f -> f instanceof ReqIdClientRequestFormatter));
+
+        assertNotNull(getField(messageCreator, "bodyFormatter"));
     }
 }

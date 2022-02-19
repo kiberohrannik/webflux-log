@@ -2,7 +2,7 @@ package com.kv.webflux.logging.client.response.message;
 
 import com.kv.webflux.logging.base.BaseTest;
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.response.message.formatter.BodyFormatter;
+import com.kv.webflux.logging.client.response.message.formatter.BodyClientResponseFormatter;
 import com.kv.webflux.logging.client.response.message.formatter.CookieClientResponseFormatter;
 import com.kv.webflux.logging.client.response.message.formatter.HeaderClientResponseFormatter;
 import com.kv.webflux.logging.client.response.message.formatter.ReqIdClientResponseFormatter;
@@ -49,7 +49,7 @@ public class BaseResponseMessageCreatorUnitTest extends BaseTest {
         responseMessageCreator = new BaseResponseMessageCreator(
                 properties,
                 List.of(reqIdClientResponseFormatter, headerClientResponseFormatter, cookieClientResponseFormatter),
-                new BodyFormatter()
+                new BodyClientResponseFormatter()
         );
     }
 

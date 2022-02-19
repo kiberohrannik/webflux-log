@@ -12,13 +12,14 @@ import java.util.List;
 public class ClientRequestLoggingFilterFactory {
 
     public static ExchangeFilterFunction defaultFilter(LoggingProperties loggingProperties) {
-        List<RequestDataMessageFormatter> formatters = new ArrayList<>();
+        List<RequestMetadataMessageFormatter> formatters = new ArrayList<>();
         formatters.add(new ReqIdClientRequestFormatter());
         formatters.add(new HeaderClientRequestFormatter());
         formatters.add(new CookieClientRequestFormatter());
-        formatters.add(new BodyClientRequestFormatter());
 
-        return new ClientRequestLoggingFilter(new BaseRequestMessageCreator(loggingProperties, formatters));
+        return new ClientRequestLoggingFilter(
+                new BaseRequestMessageCreator(loggingProperties, formatters, new BodyClientRequestFormatter())
+        );
     }
 
     public static ExchangeFilterFunction customFilter(RequestMessageCreator requestMessageCreator) {

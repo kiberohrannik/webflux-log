@@ -1,7 +1,7 @@
 package com.kv.webflux.logging.client.response.message;
 
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.response.message.formatter.BodyFormatter;
+import com.kv.webflux.logging.client.response.message.formatter.BodyClientResponseFormatter;
 import com.kv.webflux.logging.client.response.message.formatter.ResponseMetadataMessageFormatter;
 import com.kv.webflux.logging.provider.HttpStatusProvider;
 import com.kv.webflux.logging.provider.TimeElapsedProvider;
@@ -14,7 +14,7 @@ public class BaseResponseMessageCreator implements ResponseMessageCreator {
 
     private final LoggingProperties properties;
     private final List<ResponseMetadataMessageFormatter> metadataFormatters;
-    private final BodyFormatter bodyFormatter;
+    private final BodyClientResponseFormatter bodyFormatter;
 
     private final HttpStatusProvider httpStatusProvider = new HttpStatusProvider();
     private final TimeElapsedProvider timeElapsedProvider = new TimeElapsedProvider();
@@ -29,7 +29,7 @@ public class BaseResponseMessageCreator implements ResponseMessageCreator {
 
     public BaseResponseMessageCreator(LoggingProperties properties,
                                       List<ResponseMetadataMessageFormatter> metadataFormatters,
-                                      BodyFormatter bodyFormatter) {
+                                      BodyClientResponseFormatter bodyFormatter) {
         this.properties = properties;
         this.metadataFormatters = metadataFormatters;
         this.bodyFormatter = bodyFormatter;

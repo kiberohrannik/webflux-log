@@ -1,9 +1,9 @@
 package com.kv.webflux.logging.client.request.message;
 
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.request.message.formatter.RequestDataMessageFormatter;
+import com.kv.webflux.logging.client.request.message.formatter.BodyClientRequestFormatter;
+import com.kv.webflux.logging.client.request.message.formatter.RequestMetadataMessageFormatter;
 import org.springframework.web.reactive.function.client.ClientRequest;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -11,28 +11,37 @@ import java.util.List;
 public class BaseRequestMessageCreator implements RequestMessageCreator {
 
     private final LoggingProperties properties;
-    private final List<RequestDataMessageFormatter> formatters;
+    private final List<RequestMetadataMessageFormatter> metadataFormatters;
+    private final BodyClientRequestFormatter bodyFormatter;
 
 
     public BaseRequestMessageCreator(LoggingProperties properties,
-                                     List<RequestDataMessageFormatter> formatters) {
+                                     List<RequestMetadataMessageFormatter> metadataFormatters) {
+        this(properties, metadataFormatters, null);
+    }
+
+    public BaseRequestMessageCreator(LoggingProperties properties,
+                                     List<RequestMetadataMessageFormatter> metadataFormatters,
+                                     BodyClientRequestFormatter bodyFormatter) {
         this.properties = properties;
-        this.formatters = formatters;
+        this.metadataFormatters = metadataFormatters;
+        this.bodyFormatter = bodyFormatter;
     }
 
 
     @Override
-    public Mono<String> formatMessage(ClientRequest request) {
-        String base = "REQUEST: "
-                .concat(request.method().name())
-                .concat(" ")
-                .concat(request.url().toString());
+    public Mono<String> createMessage(ClientRequest request) {
+        StringBuilder messageBuilder = new StringBuilder("REQUEST: ")
+                .append(request.method().name())
+                .append(" ")
+                .append(request.url());
 
-        Flux<String> details = Flux.fromIterable(formatters)
-                .flatMap(formatter -> formatter.addData(request, properties));
+        for (RequestMetadataMessageFormatter metadataFormatter : metadataFormatters) {
+            messageBuilder.append(metadataFormatter.formatMessage(request, properties));
+        }
 
-        return Mono.just(base)
-                .concatWith(details)
-                .reduce(String::concat);
+        return bodyFormatter != null
+                ? bodyFormatter.formatMessage(request, properties).map(str -> messageBuilder.append(str).toString())
+                : Mono.just(messageBuilder.toString());
     }
 }

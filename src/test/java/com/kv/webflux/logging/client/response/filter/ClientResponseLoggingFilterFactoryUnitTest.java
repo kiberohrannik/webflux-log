@@ -37,7 +37,6 @@ public class ClientResponseLoggingFilterFactoryUnitTest extends BaseTest {
         assertTrue(metadataFormatters.stream().anyMatch(f -> f instanceof CookieClientResponseFormatter));
         assertTrue(metadataFormatters.stream().anyMatch(f -> f instanceof ReqIdClientResponseFormatter));
 
-        BodyFormatter bodyFormatter = (BodyFormatter) getField(messageCreator, "bodyFormatter");
-        assertNotNull(bodyFormatter);
+        assertNotNull(getField(messageCreator, "bodyFormatter"));
     }
 }

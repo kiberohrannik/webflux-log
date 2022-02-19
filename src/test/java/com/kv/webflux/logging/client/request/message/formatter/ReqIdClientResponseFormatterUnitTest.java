@@ -23,7 +23,7 @@ public class ReqIdClientResponseFormatterUnitTest extends BaseTest {
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
         LoggingProperties properties = LoggingProperties.builder().logRequestId(false).build();
 
-        String result = formatter.addData(testRequest, properties).block();
+        String result = formatter.formatMessage(testRequest, properties);
         assertNotNull(result);
         assertEquals(EMPTY_MESSAGE, result);
     }
@@ -32,7 +32,7 @@ public class ReqIdClientResponseFormatterUnitTest extends BaseTest {
     void addData_whenNeedLog_thenReturnWithReqId() {
         LoggingProperties properties = LoggingProperties.builder().logRequestId(true).build();
 
-        String withReqId = formatter.addData(testRequest, properties).block();
+        String withReqId = formatter.formatMessage(testRequest, properties);
         assertNotNull(withReqId);
         assertAll(
                 () -> assertTrue(withReqId.contains("REQ-ID:")),
@@ -48,7 +48,7 @@ public class ReqIdClientResponseFormatterUnitTest extends BaseTest {
                 .requestIdPrefix(reqIdPrefix)
                 .build();
 
-        String withReqId = formatter.addData(testRequest, properties).block();
+        String withReqId = formatter.formatMessage(testRequest, properties);
         assertNotNull(withReqId);
         assertAll(
                 () -> assertTrue(withReqId.contains("REQ-ID:")),

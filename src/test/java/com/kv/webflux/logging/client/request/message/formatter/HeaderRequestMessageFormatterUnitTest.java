@@ -28,7 +28,7 @@ public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
         LoggingProperties properties = LoggingProperties.builder().logHeaders(false).build();
 
-        String result = formatter.addData(testRequest, properties).block();
+        String result = formatter.formatMessage(testRequest, properties);
         assertNotNull(result);
         assertEquals(EMPTY_MESSAGE, result);
     }
@@ -37,7 +37,7 @@ public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
     void addData_whenNeedLog_thenReturnWithHeaders() {
         LoggingProperties properties = LoggingProperties.builder().logHeaders(true).build();
 
-        String withHeaders = formatter.addData(testRequest, properties).block();
+        String withHeaders = formatter.formatMessage(testRequest, properties);
         assertNotNull(withHeaders);
         assertAll(
                 () -> assertTrue(withHeaders.contains("HEADERS:")),
@@ -55,7 +55,7 @@ public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
                 .maskedHeaders(HttpHeaders.AUTHORIZATION, "AbsentHeader321")
                 .build();
 
-        String withHeaders = formatter.addData(testRequest, properties).block();
+        String withHeaders = formatter.formatMessage(testRequest, properties);
         assertNotNull(withHeaders);
         assertAll(
                 () -> assertTrue(withHeaders.contains("HEADERS:")),

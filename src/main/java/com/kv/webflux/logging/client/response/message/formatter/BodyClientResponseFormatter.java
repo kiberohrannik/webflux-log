@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.Charset;
 
-public class BodyFormatter {
+public class BodyClientResponseFormatter {
 
     public Mono<ResponseData> formatMessage(ClientResponse response, LoggingProperties properties) {
         return properties.isLogBody()

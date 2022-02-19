@@ -2,9 +2,10 @@ package com.kv.webflux.logging.provider;
 
 import com.kv.webflux.logging.base.BaseTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,13 +24,16 @@ public class TimeElapsedProviderUnitTest extends BaseTest {
         assertEquals(" ELAPSED TIME: " + timeElapsedMillis + "ms", actual);
     }
 
-    @Test
-    void createMessage_whenMoreThan999Millis_thenAddWithS() {
-        long timeElapsedMillis = new Random().nextInt(99999) + 1000;
+    @ParameterizedTest
+    @ValueSource(longs = {1234, 2300, 2004, 6056})
+    void createMessage_whenMoreThan999Millis_thenAddWithS(long timeElapsedMillis) {
 
         String actual = provider.createMessage(timeElapsedMillis);
         log.info(actual);
 
-        assertEquals(" ELAPSED TIME: " + TimeUnit.MILLISECONDS.toSeconds(timeElapsedMillis) + "s", actual);
+        String millisStr = String.valueOf(timeElapsedMillis);
+        String result = millisStr.substring(0, 1).concat(".").concat(millisStr.substring(1, millisStr.length()));
+
+        assertEquals(" ELAPSED TIME: " + result + "s", actual);
     }
 }

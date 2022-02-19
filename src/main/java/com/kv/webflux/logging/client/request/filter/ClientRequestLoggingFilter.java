@@ -22,7 +22,7 @@ public class ClientRequestLoggingFilter implements ExchangeFilterFunction {
 
     @Override
     public Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
-        return messageCreator.formatMessage(request)
+        return messageCreator.createMessage(request)
                 .doOnNext(log::info)
                 .then(next.exchange(request));
     }

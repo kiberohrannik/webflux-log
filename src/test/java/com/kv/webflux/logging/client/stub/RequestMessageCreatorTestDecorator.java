@@ -32,8 +32,8 @@ public class RequestMessageCreatorTestDecorator implements RequestMessageCreator
     }
 
     @Override
-    public Mono<String> formatMessage(ClientRequest request) {
-        return requestMessageCreator.formatMessage(request)
+    public Mono<String> createMessage(ClientRequest request) {
+        return requestMessageCreator.createMessage(request)
                 .doOnNext(message -> {
                     assertWithHttpMethodAndUrl(message, request);
 

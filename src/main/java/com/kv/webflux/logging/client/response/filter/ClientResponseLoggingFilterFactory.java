@@ -19,7 +19,7 @@ public class ClientResponseLoggingFilterFactory {
         formatters.add(new CookieClientResponseFormatter());
 
         return new ClientResponseLoggingFilter(
-                new BaseResponseMessageCreator(loggingProperties, formatters, new BodyFormatter())
+                new BaseResponseMessageCreator(loggingProperties, formatters, new BodyClientResponseFormatter())
         );
     }
 

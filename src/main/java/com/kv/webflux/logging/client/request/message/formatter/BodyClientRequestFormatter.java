@@ -6,13 +6,12 @@ import com.kv.webflux.logging.client.request.message.formatter.extractor.Request
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
-public class BodyClientRequestFormatter implements RequestDataMessageFormatter {
+public class BodyClientRequestFormatter {
 
     private final RequestBodyExtractor bodyExtractor = new RequestBodyExtractor();
 
 
-    @Override
-    public Mono<String> addData(ClientRequest request, LoggingProperties properties) {
+    public Mono<String> formatMessage(ClientRequest request, LoggingProperties properties) {
         return properties.isLogBody()
                 ? addBody(request)
                 : Mono.just(LoggingUtils.EMPTY_MESSAGE);
