@@ -32,7 +32,7 @@ public class TimeElapsedProviderUnitTest extends BaseTest {
         log.info(actual);
 
         String millisStr = String.valueOf(timeElapsedMillis);
-        String result = millisStr.substring(0, 1).concat(".").concat(millisStr.substring(1, millisStr.length()));
+        String result = millisStr.substring(0, 1).concat(".").concat(millisStr.substring(1));
 
         assertEquals(" ELAPSED TIME: " + result + "s", actual);
     }
