@@ -1,8 +1,7 @@
 POST http://localhost:8080/test/endpoint
 Accept: application/json
 Content-Type: application/json
-Request-ID: req-ID
-Authorization: sid 211126pbs1nacnju9vib
+Request-ID: req-ID-1234
 Cookie: cookieName=coooooookie
 
 {
