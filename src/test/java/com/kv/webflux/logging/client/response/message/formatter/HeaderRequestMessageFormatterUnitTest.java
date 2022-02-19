@@ -2,19 +2,17 @@ package com.kv.webflux.logging.client.response.message.formatter;
 
 import com.kv.webflux.logging.base.BaseTest;
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.response.message.ResponseData;
-import net.bytebuddy.utility.RandomString;
+import com.kv.webflux.logging.client.LoggingUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
-import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
 
-    private final HeaderMessageFormatter formatter = new HeaderMessageFormatter();
+    private final HeaderClientResponseFormatter formatter = new HeaderClientResponseFormatter();
 
     private final ClientResponse response = ClientResponse.create(HttpStatus.OK)
             .header(HttpHeaders.ACCEPT, "application/json")
@@ -23,54 +21,45 @@ public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
             .header(HttpHeaders.AUTHORIZATION, "Any-Basic-Auth")
             .build();
 
-    private final String sourceLogMessage = RandomString.make();
-    private final ResponseData sourceResponseData = new ResponseData(response, sourceLogMessage);
-
 
     @Test
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
-        LoggingProperties loggingProperties = LoggingProperties.builder().logHeaders(false).build();
+        LoggingProperties properties = LoggingProperties.builder().logHeaders(false).build();
 
-        ResponseData result = formatter.addData(loggingProperties, Mono.just(sourceResponseData)).block();
-        assertNotNull(result);
-        assertNotNull(result.getResponse());
-        assertEquals(sourceLogMessage, result.getLogMessage());
+        String result = formatter.formatMessage(response, properties);
+        assertEquals(LoggingUtils.EMPTY_MESSAGE, result);
     }
 
     @Test
     void addData_whenNeedLog_thenReturnWithHeaders() {
-        LoggingProperties loggingProperties = LoggingProperties.builder().logHeaders(true).build();
+        LoggingProperties properties = LoggingProperties.builder().logHeaders(true).build();
 
-        ResponseData withHeaders = formatter.addData(loggingProperties, Mono.just(sourceResponseData)).block();
-        assertNotNull(withHeaders);
-
-        String actualLogMessage = withHeaders.getLogMessage();
+        String withHeaders = formatter.formatMessage(response, properties);
         assertAll(
-                () -> assertTrue(actualLogMessage.contains("HEADERS:")),
-                () -> assertTrue(actualLogMessage.contains("Accept=application/json")),
-                () -> assertTrue(actualLogMessage.contains("Content-Type=application/json")),
-                () -> assertTrue(actualLogMessage.contains("Authorization=Some-Token")),
-                () -> assertTrue(actualLogMessage.contains("Authorization=Any-Basic-Auth"))
+                () -> assertNotNull(withHeaders),
+                () -> assertTrue(withHeaders.contains("HEADERS:")),
+                () -> assertTrue(withHeaders.contains("Accept=application/json")),
+                () -> assertTrue(withHeaders.contains("Content-Type=application/json")),
+                () -> assertTrue(withHeaders.contains("Authorization=Some-Token")),
+                () -> assertTrue(withHeaders.contains("Authorization=Any-Basic-Auth"))
         );
     }
 
     @Test
     void addData_whenLogAndMaskHeaders_thenReturnWithMaskedHeaders() {
-        LoggingProperties loggingProperties = LoggingProperties.builder()
+        LoggingProperties properties = LoggingProperties.builder()
                 .logHeaders(true)
                 .maskedHeaders(HttpHeaders.AUTHORIZATION, "AbsentHeader321")
                 .build();
 
-        ResponseData withHeaders = formatter.addData(loggingProperties, Mono.just(sourceResponseData)).block();
-        assertNotNull(withHeaders);
-
-        String actualLogMessage = withHeaders.getLogMessage();
+        String withHeaders = formatter.formatMessage(response, properties);
         assertAll(
-                () -> assertTrue(actualLogMessage.contains("HEADERS:")),
-                () -> assertTrue(actualLogMessage.contains("Accept=application/json")),
-                () -> assertTrue(actualLogMessage.contains("Content-Type=application/json")),
-                () -> assertTrue(actualLogMessage.contains("Authorization={masked}")),
-                () -> assertFalse(actualLogMessage.contains("AbsentHeader321"))
+                () -> assertNotNull(withHeaders),
+                () -> assertTrue(withHeaders.contains("HEADERS:")),
+                () -> assertTrue(withHeaders.contains("Accept=application/json")),
+                () -> assertTrue(withHeaders.contains("Content-Type=application/json")),
+                () -> assertTrue(withHeaders.contains("Authorization={masked}")),
+                () -> assertFalse(withHeaders.contains("AbsentHeader321"))
         );
     }
 }

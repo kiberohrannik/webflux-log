@@ -2,10 +2,13 @@ package com.kv.webflux.logging.provider;
 
 import com.kv.webflux.logging.client.LoggingProperties;
 import com.kv.webflux.logging.client.LoggingUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public final class HeaderProvider {
+
+    //TODO refactor these methods !!!!
 
     public String createMessage(MultiValueMap<String, String> headers, LoggingProperties properties) {
         if (!properties.isLogHeaders()) {
@@ -14,6 +17,8 @@ public final class HeaderProvider {
 
         StringBuilder sb = new StringBuilder(" HEADERS: [ ");
         MultiValueMap<String, String> headersToLog = new LinkedMultiValueMap<>(headers);
+
+        headersToLog.remove(HttpHeaders.SET_COOKIE);
 
         if (properties.getMaskedHeaders() == null) {
             extractAll(headersToLog, sb);

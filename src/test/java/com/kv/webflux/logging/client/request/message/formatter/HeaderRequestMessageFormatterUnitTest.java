@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
 
-    private final HeaderMessageFormatter formatter = new HeaderMessageFormatter();
+    private final HeaderClientRequestFormatter formatter = new HeaderClientRequestFormatter();
 
     private final ClientRequest testRequest = ClientRequest.create(HttpMethod.GET, URI.create("/someUri"))
             .header(HttpHeaders.ACCEPT, "application/json")

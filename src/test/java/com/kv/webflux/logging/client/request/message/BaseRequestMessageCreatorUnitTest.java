@@ -2,9 +2,9 @@ package com.kv.webflux.logging.client.request.message;
 
 import com.kv.webflux.logging.base.BaseTest;
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.request.message.formatter.CookieMessageFormatter;
-import com.kv.webflux.logging.client.request.message.formatter.HeaderMessageFormatter;
-import com.kv.webflux.logging.client.request.message.formatter.ReqIdMessageFormatter;
+import com.kv.webflux.logging.client.request.message.formatter.CookieClientRequestFormatter;
+import com.kv.webflux.logging.client.request.message.formatter.HeaderClientRequestFormatter;
+import com.kv.webflux.logging.client.request.message.formatter.ReqIdClientRequestFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,13 +27,13 @@ public class BaseRequestMessageCreatorUnitTest extends BaseTest {
     private RequestMessageCreator requestMessageCreator;
 
     @Spy
-    private ReqIdMessageFormatter reqIdFormatter;
+    private ReqIdClientRequestFormatter reqIdFormatter;
 
     @Spy
-    private HeaderMessageFormatter headerFormatter;
+    private HeaderClientRequestFormatter headerFormatter;
 
     @Spy
-    private CookieMessageFormatter cookieFormatter;
+    private CookieClientRequestFormatter cookieFormatter;
 
 
     private final LoggingProperties properties = LoggingProperties.builder()

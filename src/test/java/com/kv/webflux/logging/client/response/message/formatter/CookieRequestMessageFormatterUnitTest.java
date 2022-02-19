@@ -2,18 +2,16 @@ package com.kv.webflux.logging.client.response.message.formatter;
 
 import com.kv.webflux.logging.base.BaseTest;
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.response.message.ResponseData;
-import net.bytebuddy.utility.RandomString;
+import com.kv.webflux.logging.client.LoggingUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ClientResponse;
-import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CookieRequestMessageFormatterUnitTest extends BaseTest {
 
-    private final CookieMessageFormatter formatter = new CookieMessageFormatter();
+    private final CookieClientResponseFormatter formatter = new CookieClientResponseFormatter();
 
     private final ClientResponse response = ClientResponse.create(HttpStatus.OK)
             .cookie("Cookie-1", "some-text-one")
@@ -22,53 +20,44 @@ public class CookieRequestMessageFormatterUnitTest extends BaseTest {
             .cookie("Session", "session1234")
             .build();
 
-    private final String sourceLogMessage = RandomString.make();
-    private final ResponseData sourceResponseData = new ResponseData(response, sourceLogMessage);
-
 
     @Test
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
-        LoggingProperties loggingProperties = LoggingProperties.builder().logCookies(false).build();
+        LoggingProperties properties = LoggingProperties.builder().logCookies(false).build();
 
-        ResponseData result = formatter.addData(loggingProperties, Mono.just(sourceResponseData)).block();
-        assertNotNull(result);
-        assertNotNull(result.getResponse());
-        assertEquals(sourceLogMessage, result.getLogMessage());
+        String result = formatter.formatMessage(response, properties);
+        assertEquals(LoggingUtils.EMPTY_MESSAGE, result);
     }
 
     @Test
     void addData_whenNeedLog_thenReturnWithCookies() {
-        LoggingProperties loggingProperties = LoggingProperties.builder().logCookies(true).build();
+        LoggingProperties properties = LoggingProperties.builder().logCookies(true).build();
 
-        ResponseData withCookies = formatter.addData(loggingProperties, Mono.just(sourceResponseData)).block();
-        assertNotNull(withCookies);
-
-        String actualLogMessage = withCookies.getLogMessage();
+        String withCookies = formatter.formatMessage(response, properties);
         assertAll(
-                () -> assertTrue(actualLogMessage.contains("COOKIES (Set-Cookie):")),
-                () -> assertTrue(actualLogMessage.contains("Cookie-1=some-text-one")),
-                () -> assertTrue(actualLogMessage.contains("Cookie-1=some-text-two")),
-                () -> assertTrue(actualLogMessage.contains("Some2=any-contentSecond")),
-                () -> assertTrue(actualLogMessage.contains("Session=session1234"))
+                () -> assertNotNull(withCookies),
+                () -> assertTrue(withCookies.contains("COOKIES (Set-Cookie):")),
+                () -> assertTrue(withCookies.contains("Cookie-1=some-text-one")),
+                () -> assertTrue(withCookies.contains("Cookie-1=some-text-two")),
+                () -> assertTrue(withCookies.contains("Some2=any-contentSecond")),
+                () -> assertTrue(withCookies.contains("Session=session1234"))
         );
     }
 
     @Test
     void addData_whenLogAndMaskCookies_thenReturnWithMaskedCookies() {
-        LoggingProperties loggingProperties = LoggingProperties.builder()
+        LoggingProperties properties = LoggingProperties.builder()
                 .logCookies(true)
                 .maskedCookies("Session", "AbsentCookie321")
                 .build();
 
-        ResponseData withCookies = formatter.addData(loggingProperties, Mono.just(sourceResponseData)).block();
-        assertNotNull(withCookies);
-
-        String actualLogMessage = withCookies.getLogMessage();
+        String withCookies = formatter.formatMessage(response, properties);
         assertAll(
-                () -> assertTrue(actualLogMessage.contains("COOKIES (Set-Cookie):")),
-                () -> assertTrue(actualLogMessage.contains("Some2=any-contentSecond")),
-                () -> assertTrue(actualLogMessage.contains("Session={masked}")),
-                () -> assertFalse(actualLogMessage.contains("AbsentCookie321"))
+                () -> assertNotNull(withCookies),
+                () -> assertTrue(withCookies.contains("COOKIES (Set-Cookie):")),
+                () -> assertTrue(withCookies.contains("Some2=any-contentSecond")),
+                () -> assertTrue(withCookies.contains("Session={masked}")),
+                () -> assertFalse(withCookies.contains("AbsentCookie321"))
         );
     }
 }

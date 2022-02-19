@@ -13,10 +13,10 @@ public class ClientRequestLoggingFilterFactory {
 
     public static ExchangeFilterFunction defaultFilter(LoggingProperties loggingProperties) {
         List<RequestDataMessageFormatter> formatters = new ArrayList<>();
-        formatters.add(new ReqIdMessageFormatter());
-        formatters.add(new HeaderMessageFormatter());
-        formatters.add(new CookieMessageFormatter());
-        formatters.add(new BodyMessageFormatter());
+        formatters.add(new ReqIdClientRequestFormatter());
+        formatters.add(new HeaderClientRequestFormatter());
+        formatters.add(new CookieClientRequestFormatter());
+        formatters.add(new BodyClientRequestFormatter());
 
         return new ClientRequestLoggingFilter(new BaseRequestMessageCreator(loggingProperties, formatters));
     }

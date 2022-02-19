@@ -2,9 +2,10 @@ package com.kv.webflux.logging.client.response.message;
 
 import com.kv.webflux.logging.base.BaseTest;
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.response.message.formatter.CookieMessageFormatter;
-import com.kv.webflux.logging.client.response.message.formatter.HeaderMessageFormatter;
-import com.kv.webflux.logging.client.response.message.formatter.ReqIdMessageFormatter;
+import com.kv.webflux.logging.client.response.message.formatter.BodyFormatter;
+import com.kv.webflux.logging.client.response.message.formatter.CookieClientResponseFormatter;
+import com.kv.webflux.logging.client.response.message.formatter.HeaderClientResponseFormatter;
+import com.kv.webflux.logging.client.response.message.formatter.ReqIdClientResponseFormatter;
 import com.kv.webflux.logging.util.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,15 +29,15 @@ public class BaseResponseMessageCreatorUnitTest extends BaseTest {
     private ResponseMessageCreator responseMessageCreator;
 
     @Spy
-    private ReqIdMessageFormatter reqIdFormatter;
+    private ReqIdClientResponseFormatter reqIdClientResponseFormatter;
 
     @Spy
-    private HeaderMessageFormatter headerFormatter;
+    private HeaderClientResponseFormatter headerClientResponseFormatter;
 
     @Spy
-    private CookieMessageFormatter cookieFormatter;
+    private CookieClientResponseFormatter cookieClientResponseFormatter;
 
-    private final LoggingProperties loggingProperties = LoggingProperties.builder()
+    private final LoggingProperties properties = LoggingProperties.builder()
             .logHeaders(true)
             .logCookies(true)
             .logRequestId(true)
@@ -47,8 +46,11 @@ public class BaseResponseMessageCreatorUnitTest extends BaseTest {
 
     @BeforeEach
     void setUp() {
-        responseMessageCreator = new BaseResponseMessageCreator(loggingProperties,
-                List.of(reqIdFormatter, headerFormatter, cookieFormatter));
+        responseMessageCreator = new BaseResponseMessageCreator(
+                properties,
+                List.of(reqIdClientResponseFormatter, headerClientResponseFormatter, cookieClientResponseFormatter),
+                new BodyFormatter()
+        );
     }
 
 
@@ -67,7 +69,6 @@ public class BaseResponseMessageCreatorUnitTest extends BaseTest {
         assertNotNull(result.getResponse());
 
         String actualLogMessage = result.getLogMessage();
-        System.out.println(actualLogMessage);
 
         assertTrue(actualLogMessage.contains("RESPONSE:"));
         assertTrue(actualLogMessage.contains("ELAPSED TIME:"));
@@ -77,8 +78,8 @@ public class BaseResponseMessageCreatorUnitTest extends BaseTest {
         assertTrue(actualLogMessage.contains(HttpHeaders.AUTHORIZATION + "=Some Auth"));
         assertTrue(actualLogMessage.contains("Session=sid4567"));
 
-        verify(reqIdFormatter).addData(eq(loggingProperties), any());
-        verify(headerFormatter).addData(eq(loggingProperties), any());
-        verify(cookieFormatter).addData(eq(loggingProperties), any());
+        verify(reqIdClientResponseFormatter).formatMessage(testResponse, properties);
+        verify(headerClientResponseFormatter).formatMessage(testResponse, properties);
+        verify(cookieClientResponseFormatter).formatMessage(testResponse, properties);
     }
 }

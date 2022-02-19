@@ -33,9 +33,9 @@ public class ClientRequestLoggingFilterFactoryUnitTest extends BaseTest {
         assertNotNull(messageFormatters);
         assertEquals(4, messageFormatters.size());
 
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof HeaderMessageFormatter));
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof CookieMessageFormatter));
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof ReqIdMessageFormatter));
-        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof BodyMessageFormatter));
+        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof HeaderClientRequestFormatter));
+        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof CookieClientRequestFormatter));
+        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof ReqIdClientRequestFormatter));
+        assertTrue(messageFormatters.stream().anyMatch(formatter -> formatter instanceof BodyClientRequestFormatter));
     }
 }

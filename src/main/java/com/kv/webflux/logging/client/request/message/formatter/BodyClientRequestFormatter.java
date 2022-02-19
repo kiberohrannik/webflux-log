@@ -6,7 +6,7 @@ import com.kv.webflux.logging.client.request.message.formatter.extractor.Request
 import org.springframework.web.reactive.function.client.ClientRequest;
 import reactor.core.publisher.Mono;
 
-public class BodyMessageFormatter implements RequestDataMessageFormatter {
+public class BodyClientRequestFormatter implements RequestDataMessageFormatter {
 
     private final RequestBodyExtractor bodyExtractor = new RequestBodyExtractor();
 

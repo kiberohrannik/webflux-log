@@ -14,9 +14,9 @@ import java.net.URI;
 import static com.kv.webflux.logging.client.LoggingUtils.EMPTY_MESSAGE;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BodyMessageFormatterUnitTest extends BaseTest {
+public class BodyFormatterUnitTest extends BaseTest {
 
-    private final BodyMessageFormatter formatter = new BodyMessageFormatter();
+    private final BodyClientRequestFormatter formatter = new BodyClientRequestFormatter();
 
     private final String bodyStr = RandomString.make();
 

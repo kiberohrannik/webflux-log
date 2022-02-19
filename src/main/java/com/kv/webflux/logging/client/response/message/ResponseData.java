@@ -20,6 +20,11 @@ public class ResponseData {
         return this;
     }
 
+    public ResponseData addFirst(String logMessage) {
+        this.logMessage = logMessage + this.logMessage;
+        return this;
+    }
+
     public ClientResponse getResponse() {
         return response;
     }

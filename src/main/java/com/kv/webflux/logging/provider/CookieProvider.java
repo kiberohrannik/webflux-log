@@ -9,6 +9,9 @@ import org.springframework.util.MultiValueMap;
 
 public final class CookieProvider {
 
+    //TODO refactor these methods !!!!
+
+
     public String createClientRequestMessage(MultiValueMap<String, String> cookies, LoggingProperties properties) {
         if (!properties.isLogCookies()) {
             return LoggingUtils.EMPTY_MESSAGE;
@@ -25,25 +28,29 @@ public final class CookieProvider {
         return sb.append("]").toString();
     }
 
-    public String createServerRequestMessage(MultiValueMap<String, HttpCookie> cookies, LoggingProperties props) {
+    public String createServerRequestMessage(MultiValueMap<String, HttpCookie> cookies, LoggingProperties properties) {
         StringBuilder sb = new StringBuilder(" COOKIES: [ ");
 
-        if (props.getMaskedCookies() == null) {
+        if (properties.getMaskedCookies() == null) {
             extractInServerRequest(cookies, sb);
         } else {
-            extractInServerRequest(setMaskInServerRequest(cookies, props.getMaskedCookies()), sb);
+            extractInServerRequest(setMaskInServerRequest(cookies, properties.getMaskedCookies()), sb);
         }
 
         return sb.append("]").toString();
     }
 
-    public String createResponseMessage(MultiValueMap<String, ResponseCookie> cookies, LoggingProperties props) {
+    public String createResponseMessage(MultiValueMap<String, ResponseCookie> cookies, LoggingProperties properties) {
+        if (!properties.isLogCookies()) {
+            return LoggingUtils.EMPTY_MESSAGE;
+        }
+
         StringBuilder sb = new StringBuilder(" COOKIES (Set-Cookie): [ ");
 
-        if (props.getMaskedCookies() == null) {
+        if (properties.getMaskedCookies() == null) {
             extractInResponse(cookies, sb);
         } else {
-            extractInResponse(setMaskInResponse(cookies, props.getMaskedCookies()), sb);
+            extractInResponse(setMaskInResponse(cookies, properties.getMaskedCookies()), sb);
         }
 
         return sb.append("]").toString();

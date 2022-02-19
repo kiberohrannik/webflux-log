@@ -12,9 +12,9 @@ import java.net.URI;
 import static com.kv.webflux.logging.client.LoggingUtils.EMPTY_MESSAGE;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ReqIdMessageFormatterUnitTest extends BaseTest {
+public class ReqIdClientResponseFormatterUnitTest extends BaseTest {
 
-    private final ReqIdMessageFormatter formatter = new ReqIdMessageFormatter();
+    private final ReqIdClientRequestFormatter formatter = new ReqIdClientRequestFormatter();
 
     private final ClientRequest testRequest = ClientRequest.create(HttpMethod.GET, URI.create("/someUri")).build();
 
