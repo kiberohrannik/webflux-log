@@ -1,7 +1,7 @@
 package com.kv.webflux.logging.client.request.message.formatter.extractor;
 
 import com.kv.webflux.logging.base.BaseTest;
-import lombok.Data;
+import com.kv.webflux.logging.server.app.TestDto;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -67,15 +67,8 @@ public class RequestBodyMapperUnitTest extends BaseTest {
 
     private static TestDto generateTestDto() {
         TestDto testDto = new TestDto();
-        testDto.value0 = RandomString.make();
-        testDto.value1 = RandomString.make();
+        testDto.setValue0(RandomString.make());
+        testDto.setValue1(RandomString.make());
         return testDto;
-    }
-
-
-    @Data
-    static class TestDto {
-        private String value0;
-        private String value1;
     }
 }

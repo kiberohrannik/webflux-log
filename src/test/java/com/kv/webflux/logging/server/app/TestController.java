@@ -2,9 +2,6 @@ package com.kv.webflux.logging.server.app;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,17 +22,9 @@ public class TestController {
     @PostMapping(TEST_ENDPOINT)
     public Mono<String> testEndpoint(@RequestBody Mono<TestDto> requestBody) {
         return requestBody.doOnNext(Assertions::assertNotNull)
-                .map(body -> toJson(body).concat(RESPONSE_PREFIX));
+                .map(body -> toJson(body) + RESPONSE_PREFIX);
     }
 
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class TestDto {
-        private String value0;
-        private String value1;
-    }
 
     private String toJson(TestDto testDto) {
         try {

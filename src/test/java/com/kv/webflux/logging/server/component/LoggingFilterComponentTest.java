@@ -2,7 +2,7 @@ package com.kv.webflux.logging.server.component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kv.webflux.logging.server.app.TestController;
+import com.kv.webflux.logging.server.app.TestDto;
 import com.kv.webflux.logging.server.base.BaseIntegrationTest;
 import net.bytebuddy.utility.RandomString;
 import org.apache.commons.lang3.StringUtils;
@@ -82,7 +82,7 @@ public class LoggingFilterComponentTest extends BaseIntegrationTest {
     void filter_whenReturned200_thenLogFullRequest_andFullResponse(CapturedOutput output)
             throws JsonProcessingException {
 
-        TestController.TestDto requestBody = new TestController.TestDto(RandomString.make(), RandomString.make());
+        TestDto requestBody = new TestDto(RandomString.make(), RandomString.make());
         String validReqJson = new ObjectMapper().writeValueAsString(requestBody);
 
         ResponseEntity<String> response = createWebClient().post()

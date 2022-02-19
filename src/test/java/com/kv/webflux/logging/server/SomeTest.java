@@ -3,6 +3,7 @@ package com.kv.webflux.logging.server;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kv.webflux.logging.server.app.TestController;
+import com.kv.webflux.logging.server.app.TestDto;
 import com.kv.webflux.logging.server.base.BaseIntegrationTest;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ public class SomeTest extends BaseIntegrationTest {
 
     @Test
     void logRequestResponse_usingNetty() throws JsonProcessingException {
-        TestController.TestDto dto = new TestController.TestDto(RandomString.make(), RandomString.make());
+        TestDto dto = new TestDto(RandomString.make(), RandomString.make());
         String requestBody = new ObjectMapper().writeValueAsString(dto);
 
         String result = createWebClient().post()

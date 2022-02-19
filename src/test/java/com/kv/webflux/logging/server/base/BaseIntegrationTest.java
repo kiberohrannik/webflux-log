@@ -6,6 +6,7 @@ import com.kv.webflux.logging.base.BaseTest;
 import com.kv.webflux.logging.client.LoggingProperties;
 import com.kv.webflux.logging.server.ServerLoggingFilterFactory;
 import com.kv.webflux.logging.server.app.TestController;
+import com.kv.webflux.logging.server.app.TestDto;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -37,7 +38,7 @@ public class BaseIntegrationTest extends BaseTest {
     }
 
     protected void verifyTestEndpointRequestSuccess() throws JsonProcessingException {
-        TestController.TestDto body = new TestController.TestDto(RandomString.make(40), RandomString.make());
+        TestDto body = new TestDto(RandomString.make(40), RandomString.make());
         String bodyJson = objectMapper.writeValueAsString(body);
 
         String result = createWebClient().post()
