@@ -35,6 +35,11 @@ public class LoggingFilter implements WebFilter {
         ServerHttpRequest loggedRequest = requestMessageCreator.log(exchange);
         ServerHttpResponse loggedResponse = responseMessageCreator.log(exchange, startMillis);
 
-        return chain.filter(exchange.mutate().request(loggedRequest).response(loggedResponse).build());
+        return chain.filter(
+                exchange.mutate()
+                        .request(loggedRequest)
+                        .response(loggedResponse)
+                        .build()
+        );
     }
 }

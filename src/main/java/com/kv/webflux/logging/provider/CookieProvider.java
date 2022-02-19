@@ -29,6 +29,10 @@ public final class CookieProvider {
     }
 
     public String createServerRequestMessage(MultiValueMap<String, HttpCookie> cookies, LoggingProperties properties) {
+        if (!properties.isLogCookies()) {
+            return LoggingUtils.EMPTY_MESSAGE;
+        }
+
         StringBuilder sb = new StringBuilder(" COOKIES: [ ");
 
         if (properties.getMaskedCookies() == null) {

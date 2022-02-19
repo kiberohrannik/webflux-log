@@ -3,7 +3,7 @@ package com.kv.webflux.logging.server.message.logger;
 import com.kv.webflux.logging.client.LoggingProperties;
 import com.kv.webflux.logging.provider.HttpStatusProvider;
 import com.kv.webflux.logging.provider.TimeElapsedProvider;
-import com.kv.webflux.logging.server.message.formatter.ServerMessageFormatter;
+import com.kv.webflux.logging.server.message.formatter.ServerMetadataMessageFormatter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -17,25 +17,25 @@ public final class DefaultServerResponseLogger implements ServerResponseLogger {
 
     private static final Log log = LogFactory.getLog(DefaultServerResponseLogger.class);
 
-    private final LoggingProperties loggingProperties;
-    private final List<ServerMessageFormatter> messageFormatters;
+    private final LoggingProperties properties;
+    private final List<ServerMetadataMessageFormatter> messageFormatters;
 
     private final HttpStatusProvider statusProvider = new HttpStatusProvider();
     private final TimeElapsedProvider timeProvider = new TimeElapsedProvider();
 
 
-    public DefaultServerResponseLogger(LoggingProperties loggingProperties,
-                                       List<ServerMessageFormatter> messageFormatters) {
-        this.loggingProperties = loggingProperties;
+    public DefaultServerResponseLogger(LoggingProperties properties,
+                                       List<ServerMetadataMessageFormatter> messageFormatters) {
+        this.properties = properties;
         this.messageFormatters = messageFormatters;
     }
 
 
     @Override
     public ServerHttpResponse log(ServerWebExchange exchange, long exchangeStartTimeMillis) {
-        Supplier<String> baseMessageSupplier = createNoBodyMessage(exchange, exchangeStartTimeMillis);
+        Supplier<String> baseMessageSupplier = createMetadataMessage(exchange, exchangeStartTimeMillis);
 
-        if (loggingProperties.isLogBody()) {
+        if (properties.isLogBody()) {
             return new LoggingServerHttpResponseDecorator(exchange.getResponse(), baseMessageSupplier);
 
         } else {
@@ -46,18 +46,18 @@ public final class DefaultServerResponseLogger implements ServerResponseLogger {
     }
 
 
-    private Supplier<String> createNoBodyMessage(ServerWebExchange exchange, long exchangeStartTimeMillis) {
+    private Supplier<String> createMetadataMessage(ServerWebExchange exchange, long exchangeStartTimeMillis) {
         return () -> {
             String status = statusProvider.createMessage(exchange.getResponse().getRawStatusCode());
+            StringBuilder metadata = new StringBuilder(status);
 
-            String dataMessage = "";
-            for (ServerMessageFormatter formatter : messageFormatters) {
-                dataMessage = formatter.addData(exchange, loggingProperties, dataMessage);
+            for (ServerMetadataMessageFormatter formatter : messageFormatters) {
+                metadata.append(formatter.formatMessage(exchange, properties));
             }
 
             String timeElapsed = timeProvider.createMessage(System.currentTimeMillis() - exchangeStartTimeMillis);
 
-            return "RESPONSE:".concat(timeElapsed).concat(status).concat(dataMessage);
+            return "RESPONSE:".concat(timeElapsed).concat(metadata.toString());
         };
     }
 }

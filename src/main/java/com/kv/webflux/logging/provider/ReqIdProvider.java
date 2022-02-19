@@ -8,14 +8,6 @@ public final class ReqIdProvider {
     //TODO refactor these methods !!!!
 
 
-    public String createFromLogPrefix(String logPrefix, LoggingProperties logProps, String sourceMessage) {
-        return logProps.isLogRequestId()
-                ? sourceMessage.concat(create(formatReqId(logPrefix), logProps.getRequestIdPrefix()))
-                : sourceMessage;
-    }
-
-
-    //**************************************************
     public String createFromLogPrefix(String logPrefix, LoggingProperties properties) {
         return properties.isLogRequestId()
                 ? create(formatReqId(logPrefix), properties.getRequestIdPrefix())

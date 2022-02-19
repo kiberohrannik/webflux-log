@@ -12,11 +12,8 @@ public class ReqIdProviderUnitTest extends BaseTest {
 
     private final ReqIdProvider provider = new ReqIdProvider();
 
-    private final String sourceMessage = "some base message ...";
-
     private final LoggingProperties propsDontLogReqId = LoggingProperties.builder().build();
     private final LoggingProperties propsLogReqId = LoggingProperties.builder().logRequestId(true).build();
-
     private final LoggingProperties propsLogReqIdWithPrefix = LoggingProperties.builder()
             .logRequestId(true)
             .requestIdPrefix(RandomString.make(10))
@@ -25,10 +22,10 @@ public class ReqIdProviderUnitTest extends BaseTest {
 
     @Test
     void createFromLogPrefix_whenDontLogReqId_thenReturnSourceMessage() {
-        String actual = provider.createFromLogPrefix(RandomString.make(), propsDontLogReqId, sourceMessage);
+        String actual = provider.createFromLogPrefix(RandomString.make(), propsDontLogReqId);
         log.info(actual);
 
-        assertEquals(sourceMessage, actual);
+        assertEquals(LoggingUtils.EMPTY_MESSAGE, actual);
     }
 
     @Test
@@ -36,10 +33,10 @@ public class ReqIdProviderUnitTest extends BaseTest {
         String reqId = RandomString.make();
         String logPrefix = "[ " + reqId + " ]";
 
-        String actual = provider.createFromLogPrefix(logPrefix, propsLogReqId, sourceMessage);
+        String actual = provider.createFromLogPrefix(logPrefix, propsLogReqId);
         log.info(actual);
 
-        assertEquals(sourceMessage + " REQ-ID: [ " + reqId + " ]", actual);
+        assertEquals(" REQ-ID: [ " + reqId + " ]", actual);
     }
 
     @Test
@@ -48,10 +45,10 @@ public class ReqIdProviderUnitTest extends BaseTest {
         String reqId1 = RandomString.make();
         String logPrefix = "[ " + reqId0 + " ]" + "[ " + reqId1 + " ]";
 
-        String actual = provider.createFromLogPrefix(logPrefix, propsLogReqId, sourceMessage);
+        String actual = provider.createFromLogPrefix(logPrefix, propsLogReqId);
         log.info(actual);
 
-        assertEquals(sourceMessage + " REQ-ID: [ " + reqId0 + "[" + reqId1 + "] ]", actual);
+        assertEquals(" REQ-ID: [ " + reqId0 + "[" + reqId1 + "] ]", actual);
     }
 
     @Test
@@ -59,11 +56,10 @@ public class ReqIdProviderUnitTest extends BaseTest {
         String reqId = RandomString.make();
         String logPrefix = "[ " + reqId + " ]";
 
-        String actual = provider.createFromLogPrefix(logPrefix, propsLogReqIdWithPrefix, sourceMessage);
+        String actual = provider.createFromLogPrefix(logPrefix, propsLogReqIdWithPrefix);
         log.info(actual);
 
-        assertEquals(sourceMessage + " REQ-ID: [ " + propsLogReqIdWithPrefix.getRequestIdPrefix() + "_" + reqId + " ]",
-                actual);
+        assertEquals(" REQ-ID: [ " + propsLogReqIdWithPrefix.getRequestIdPrefix() + "_" + reqId + " ]", actual);
     }
 
 

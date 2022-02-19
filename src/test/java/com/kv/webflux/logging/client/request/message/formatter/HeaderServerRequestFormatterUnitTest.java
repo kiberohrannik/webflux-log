@@ -1,20 +1,22 @@
-package com.kv.webflux.logging.client.response.message.formatter;
+package com.kv.webflux.logging.client.request.message.formatter;
 
 import com.kv.webflux.logging.base.BaseTest;
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.client.LoggingUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.reactive.function.client.ClientRequest;
 
+import java.net.URI;
+
+import static com.kv.webflux.logging.client.LoggingUtils.EMPTY_MESSAGE;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
+public class HeaderServerRequestFormatterUnitTest extends BaseTest {
 
-    private final HeaderClientResponseFormatter formatter = new HeaderClientResponseFormatter();
+    private final HeaderClientRequestFormatter formatter = new HeaderClientRequestFormatter();
 
-    private final ClientResponse response = ClientResponse.create(HttpStatus.OK)
+    private final ClientRequest testRequest = ClientRequest.create(HttpMethod.GET, URI.create("/someUri"))
             .header(HttpHeaders.ACCEPT, "application/json")
             .header(HttpHeaders.CONTENT_TYPE, "application/json")
             .header(HttpHeaders.AUTHORIZATION, "Some-Token")
@@ -26,17 +28,18 @@ public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
     void addData_whenDontNeedToLog_thenReturnSourceMessage() {
         LoggingProperties properties = LoggingProperties.builder().logHeaders(false).build();
 
-        String result = formatter.formatMessage(response, properties);
-        assertEquals(LoggingUtils.EMPTY_MESSAGE, result);
+        String result = formatter.formatMessage(testRequest, properties);
+        assertNotNull(result);
+        assertEquals(EMPTY_MESSAGE, result);
     }
 
     @Test
     void addData_whenNeedLog_thenReturnWithHeaders() {
         LoggingProperties properties = LoggingProperties.builder().logHeaders(true).build();
 
-        String withHeaders = formatter.formatMessage(response, properties);
+        String withHeaders = formatter.formatMessage(testRequest, properties);
+        assertNotNull(withHeaders);
         assertAll(
-                () -> assertNotNull(withHeaders),
                 () -> assertTrue(withHeaders.contains("HEADERS:")),
                 () -> assertTrue(withHeaders.contains("Accept=application/json")),
                 () -> assertTrue(withHeaders.contains("Content-Type=application/json")),
@@ -52,9 +55,9 @@ public class HeaderRequestMessageFormatterUnitTest extends BaseTest {
                 .maskedHeaders(HttpHeaders.AUTHORIZATION, "AbsentHeader321")
                 .build();
 
-        String withHeaders = formatter.formatMessage(response, properties);
+        String withHeaders = formatter.formatMessage(testRequest, properties);
+        assertNotNull(withHeaders);
         assertAll(
-                () -> assertNotNull(withHeaders),
                 () -> assertTrue(withHeaders.contains("HEADERS:")),
                 () -> assertTrue(withHeaders.contains("Accept=application/json")),
                 () -> assertTrue(withHeaders.contains("Content-Type=application/json")),

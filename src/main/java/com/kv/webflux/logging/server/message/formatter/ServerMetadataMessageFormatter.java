@@ -3,7 +3,7 @@ package com.kv.webflux.logging.server.message.formatter;
 import com.kv.webflux.logging.client.LoggingProperties;
 import org.springframework.web.server.ServerWebExchange;
 
-public interface ServerMessageFormatter {
+public interface ServerMetadataMessageFormatter {
 
-    String addData(ServerWebExchange exchange, LoggingProperties logProps, String source);
+    String formatMessage(ServerWebExchange exchange, LoggingProperties properties);
 }

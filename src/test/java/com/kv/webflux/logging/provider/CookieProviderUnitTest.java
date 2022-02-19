@@ -120,6 +120,7 @@ public class CookieProviderUnitTest extends BaseTest {
                                                                MultiValueMap<String, HttpCookie> cookieMap) {
 
         LoggingProperties propsWithMasked = LoggingProperties.builder()
+                .logCookies(true)
                 .maskedCookies(cookie0.getName(), cookie1.getName(), notExistingCookieName)
                 .build();
 

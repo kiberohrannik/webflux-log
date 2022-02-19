@@ -1,12 +1,12 @@
 package com.kv.webflux.logging.server;
 
 import com.kv.webflux.logging.client.LoggingProperties;
-import com.kv.webflux.logging.server.message.formatter.ReqIdMessageFormatter;
-import com.kv.webflux.logging.server.message.formatter.ServerMessageFormatter;
-import com.kv.webflux.logging.server.message.formatter.request.CookieRequestMessageFormatter;
-import com.kv.webflux.logging.server.message.formatter.request.HeaderRequestMessageFormatter;
-import com.kv.webflux.logging.server.message.formatter.response.CookieResponseMessageFormatter;
-import com.kv.webflux.logging.server.message.formatter.response.HeaderResponseMessageFormatter;
+import com.kv.webflux.logging.server.message.formatter.ReqIdServerFormatter;
+import com.kv.webflux.logging.server.message.formatter.ServerMetadataMessageFormatter;
+import com.kv.webflux.logging.server.message.formatter.request.CookieServerRequestFormatter;
+import com.kv.webflux.logging.server.message.formatter.request.HeaderServerRequestFormatter;
+import com.kv.webflux.logging.server.message.formatter.response.CookieServerResponseFormatter;
+import com.kv.webflux.logging.server.message.formatter.response.HeaderServerResponseFormatter;
 import com.kv.webflux.logging.server.message.logger.DefaultServerRequestLogger;
 import com.kv.webflux.logging.server.message.logger.DefaultServerResponseLogger;
 import com.kv.webflux.logging.server.message.logger.ServerRequestLogger;
@@ -16,30 +16,29 @@ import java.util.List;
 
 public class ServerLoggingFilterFactory {
 
-    public static LoggingFilter defaultFilter(LoggingProperties requestLogProps,
-                                              LoggingProperties responseLogProps) {
+    public static LoggingFilter defaultFilter(LoggingProperties requestProperties,
+                                              LoggingProperties responseProperties) {
 
-        List<ServerMessageFormatter> requestFormatters = List.of(
-                new ReqIdMessageFormatter(),
-                new HeaderRequestMessageFormatter(),
-                new CookieRequestMessageFormatter()
+        List<ServerMetadataMessageFormatter> requestFormatters = List.of(
+                new ReqIdServerFormatter(),
+                new HeaderServerRequestFormatter(),
+                new CookieServerRequestFormatter()
         );
 
-        List<ServerMessageFormatter> responseFormatters = List.of(
-                new ReqIdMessageFormatter(),
-                new HeaderResponseMessageFormatter(),
-                new CookieResponseMessageFormatter()
+        List<ServerMetadataMessageFormatter> responseFormatters = List.of(
+                new ReqIdServerFormatter(),
+                new HeaderServerResponseFormatter(),
+                new CookieServerResponseFormatter()
         );
 
         return new LoggingFilter(
-                new DefaultServerRequestLogger(requestLogProps, requestFormatters),
-                new DefaultServerResponseLogger(responseLogProps, responseFormatters)
+                new DefaultServerRequestLogger(requestProperties, requestFormatters),
+                new DefaultServerResponseLogger(responseProperties, responseFormatters)
         );
     }
 
     public static LoggingFilter customFilter(ServerRequestLogger serverRequestLogger,
                                              ServerResponseLogger serverResponseLogger) {
-
         return new LoggingFilter(serverRequestLogger, serverResponseLogger);
     }
 }

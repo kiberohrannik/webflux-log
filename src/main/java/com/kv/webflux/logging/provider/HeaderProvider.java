@@ -19,6 +19,8 @@ public final class HeaderProvider {
         MultiValueMap<String, String> headersToLog = new LinkedMultiValueMap<>(headers);
 
         headersToLog.remove(HttpHeaders.SET_COOKIE);
+        headersToLog.remove(HttpHeaders.COOKIE);
+        headersToLog.remove(HttpHeaders.COOKIE.toLowerCase());
 
         if (properties.getMaskedHeaders() == null) {
             extractAll(headersToLog, sb);
