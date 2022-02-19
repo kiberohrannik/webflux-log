@@ -24,14 +24,11 @@ public final class RequestBodyExtractor {
         BodyInserter<?, ? super ClientHttpRequest> inserter = request.body();
 
         Object bodyValue = getInserterFieldValue(inserter, BODY_VALUE_FIELD);
-
         if (bodyValue == null) {
-            log.debug("Empty body in request: " + request.url());
             return Mono.empty();
         }
 
         Object bodyType = getInserterFieldValue(inserter, BODY_TYPE_FIELD);
-
         return bodyMapper.mapToString(bodyValue, bodyType);
     }
 
