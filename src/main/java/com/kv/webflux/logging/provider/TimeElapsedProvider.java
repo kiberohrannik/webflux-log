@@ -16,6 +16,7 @@ public class TimeElapsedProvider {
 
         String secPart = millisStr.substring(0, millisStartIndex);
         String millisPart = millisStr.substring(millisStartIndex);
+
         return secPart.concat(".").concat(millisPart);
     }
 }

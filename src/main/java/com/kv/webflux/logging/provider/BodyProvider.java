@@ -5,9 +5,6 @@ import org.springframework.util.FastByteArrayOutputStream;
 
 public final class BodyProvider {
 
-    //TODO refactor these methods !!!!
-
-
     public String createWithBody(FastByteArrayOutputStream bodyOutputStream) {
         String bodyStr = bodyOutputStream.toString();
         return " BODY: [ "

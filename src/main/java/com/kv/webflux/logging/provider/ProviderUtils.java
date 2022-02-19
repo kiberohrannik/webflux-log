@@ -1,43 +1,41 @@
 package com.kv.webflux.logging.provider;
 
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 final class ProviderUtils {
 
-    //TODO refactor these methods !!!!
+    static <T> Map<String, List<T>> setMaskToValues(Map<String, List<T>> multiValueMap,
+                                                    String[] objectKeysToMask, T mask) {
 
-
-    static <T> MultiValueMap<String, T> setMaskToValues(MultiValueMap<String, T> multiValueMap,
-                                                        String[] objectKeysToMask, T mask) {
-
-        MultiValueMap<String, T> copiedMap = new LinkedMultiValueMap<>(multiValueMap);
+        LinkedCaseInsensitiveMap<List<T>> caseInsensitiveMap = new LinkedCaseInsensitiveMap<>();
+        caseInsensitiveMap.putAll(multiValueMap);
 
         for (String maskedName : objectKeysToMask) {
-            setMaskToValue(copiedMap, maskedName, mask);
+            setMaskToValue(caseInsensitiveMap, maskedName, mask);
         }
 
-        return copiedMap;
+        return caseInsensitiveMap;
     }
 
-    static <T> void setMaskToValue(MultiValueMap<String, T> sourceMap,
+    static <T> void setMaskToValue(LinkedCaseInsensitiveMap<List<T>> caseInsensitiveMap,
                                    String objectKeyToMask, T mask) {
 
-        List<T> values = sourceMap.get(objectKeyToMask);
+        List<T> values = caseInsensitiveMap.get(objectKeyToMask);
 
         if (values != null && !values.isEmpty()) {
             if (values.size() == 1) {
-                sourceMap.put(objectKeyToMask, List.of(mask));
+                caseInsensitiveMap.put(objectKeyToMask, List.of(mask));
 
             } else {
                 List<T> masked = values.stream()
                         .map(value -> mask)
                         .collect(Collectors.toList());
 
-                sourceMap.put(objectKeyToMask, masked);
+                caseInsensitiveMap.put(objectKeyToMask, masked);
             }
         }
     }

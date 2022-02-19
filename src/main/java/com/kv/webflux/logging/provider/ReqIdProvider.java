@@ -5,9 +5,6 @@ import com.kv.webflux.logging.client.LoggingUtils;
 
 public final class ReqIdProvider {
 
-    //TODO refactor these methods !!!!
-
-
     public String createFromLogPrefix(String logPrefix, LoggingProperties properties) {
         return properties.isLogRequestId()
                 ? create(formatReqId(logPrefix), properties.getRequestIdPrefix())
@@ -15,9 +12,9 @@ public final class ReqIdProvider {
     }
 
 
-    public String createFromLogId(String logId, LoggingProperties logProps) {
-        return logProps.isLogRequestId()
-                ? create(logId, logProps.getRequestIdPrefix()).trim()
+    public String createFromLogId(String logId, LoggingProperties properties) {
+        return properties.isLogRequestId()
+                ? create(logId, properties.getRequestIdPrefix()).trim()
                 : LoggingUtils.EMPTY_MESSAGE;
     }
 
