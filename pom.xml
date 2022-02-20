@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kv</groupId>
-    <artifactId>webflux-addons</artifactId>
+    <artifactId>webflux-log</artifactId>
     <version>${project.version}</version>
 
-    <name>webflux-addons</name>
+    <name>webflux-log</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
