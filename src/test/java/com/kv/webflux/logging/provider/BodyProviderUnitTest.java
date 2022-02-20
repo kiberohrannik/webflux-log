@@ -1,47 +1,65 @@
 package com.kv.webflux.logging.provider;
 
 import com.kv.webflux.logging.base.BaseTest;
-import com.kv.webflux.logging.client.LoggingUtils;
 import net.bytebuddy.utility.RandomString;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.FastByteArrayOutputStream;
 
 import java.io.IOException;
 
+import static com.kv.webflux.logging.client.LoggingUtils.NO_BODY_MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BodyProviderUnitTest extends BaseTest {
+
+    private static final String expectedNoBodyMessage = wrapBody(NO_BODY_MESSAGE);
 
     private final BodyProvider provider = new BodyProvider();
 
 
     @Test
-    void createWithBody_whenByteStreamNotEmpty_thenReturnWithBody() throws IOException {
+    void createBodyMessage_whenByteStreamNotEmpty_thenReturnWithBody() throws IOException {
         FastByteArrayOutputStream bodyStream = new FastByteArrayOutputStream();
         bodyStream.write(RandomString.make().getBytes());
 
-        String actual = provider.createWithBody(bodyStream);
-        log.info(actual);
-
-        assertEquals(" BODY: [ " + bodyStream + " ]", actual);
+        String actual = provider.createBodyMessage(bodyStream);
+        assertEquals(wrapBody(bodyStream.toString()), actual);
     }
 
     @Test
     void createWithBody_whenByteStreamIsEmpty_thenReturnNoBodyMessage() {
         FastByteArrayOutputStream bodyStream = new FastByteArrayOutputStream();
 
-        String actual = provider.createWithBody(bodyStream);
-        log.info(actual);
-
-        Assertions.assertEquals(" BODY: [ " + LoggingUtils.NO_BODY_MESSAGE + " ]", actual);
+        String actual = provider.createBodyMessage(bodyStream);
+        assertEquals(expectedNoBodyMessage, actual);
     }
 
     @Test
-    void createWithEmptyBody_test() {
-        String actual = provider.createWithEmptyBody();
-        log.info(actual);
+    void createNoBodyMessage_test() {
+        String actual = provider.createNoBodyMessage();
+        assertEquals(expectedNoBodyMessage, actual);
+    }
 
-        assertEquals(" BODY: [ " + LoggingUtils.NO_BODY_MESSAGE + " ]", actual);
+    @Test
+    void createBodyMessage_whenFullString_thenReturnWrapped() {
+        String body = RandomString.make();
+        String expected = wrapBody(body);
+
+        String actual = provider.createBodyMessage(body);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void createBodyMessage_whenEmptyOrNullString_thenReturnNoBody() {
+        String nullBody = null;
+        String emptyBody = "";
+
+        assertEquals(expectedNoBodyMessage, provider.createBodyMessage(nullBody));
+        assertEquals(expectedNoBodyMessage, provider.createBodyMessage(emptyBody));
+    }
+
+
+    private static String wrapBody(String body) {
+        return " BODY: [ " + body + " ]";
     }
 }

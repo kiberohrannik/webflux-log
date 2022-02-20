@@ -33,10 +33,10 @@ public class LoggingServerHttpRequestDecorator extends ServerHttpRequestDecorato
     public Flux<DataBuffer> getBody() {
         return super.getBody()
                 .switchIfEmpty(Flux.<DataBuffer>empty()
-                        .doOnComplete(() -> log.info(reqIdMessage.concat(bodyProvider.createWithEmptyBody()))))
+                        .doOnComplete(() -> log.info(reqIdMessage.concat(bodyProvider.createNoBodyMessage()))))
 
                 .doOnNext(dataBuffer -> {
-                    String fullBodyMessage = bodyProvider.createWithBody(copyBodyBuffer(dataBuffer));
+                    String fullBodyMessage = bodyProvider.createBodyMessage(copyBodyBuffer(dataBuffer));
                     log.info(reqIdMessage.concat(fullBodyMessage));
                 });
     }
