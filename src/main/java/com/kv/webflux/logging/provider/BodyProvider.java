@@ -4,10 +4,17 @@ import com.kv.webflux.logging.client.LoggingUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Mono;
 
 import java.nio.charset.Charset;
 
 public final class BodyProvider {
+
+    public Mono<String> createBodyMessage(Mono<String> bodyMono) {
+        return bodyMono
+                .defaultIfEmpty(LoggingUtils.NO_BODY_MESSAGE)
+                .map(this::createBodyMessage);
+    }
 
     public String createBodyMessage(FastByteArrayOutputStream bodyOutputStream) {
         return createBodyMessage(bodyOutputStream.toString());

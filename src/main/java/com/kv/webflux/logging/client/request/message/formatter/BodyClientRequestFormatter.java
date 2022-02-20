@@ -15,14 +15,7 @@ public class BodyClientRequestFormatter {
 
     public Mono<String> formatMessage(ClientRequest request, LoggingProperties properties) {
         return properties.isLogBody()
-                ? addBody(request)
+                ? bodyProvider.createBodyMessage(bodyExtractor.extractBody(request))
                 : Mono.just(LoggingUtils.EMPTY_MESSAGE);
-    }
-
-
-    private Mono<String> addBody(ClientRequest request) {
-        return bodyExtractor.extractBody(request)
-                .defaultIfEmpty(LoggingUtils.NO_BODY_MESSAGE)
-                .map(bodyProvider::createBodyMessage);
     }
 }

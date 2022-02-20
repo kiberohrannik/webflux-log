@@ -4,6 +4,8 @@ import com.kv.webflux.logging.base.BaseTest;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.FastByteArrayOutputStream;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.io.IOException;
 
@@ -16,6 +18,25 @@ public class BodyProviderUnitTest extends BaseTest {
 
     private final BodyProvider provider = new BodyProvider();
 
+
+    @Test
+    void createBodyMessage_whenBodyMonoIsNotEmpty_thenReturnWrapped() {
+        String body = RandomString.make();
+        Mono<String> bodyMono = Mono.just(body);
+
+        StepVerifier.create(provider.createBodyMessage(bodyMono))
+                .expectNext(wrapBody(body))
+                .verifyComplete();
+    }
+
+    @Test
+    void createBodyMessage_whenBodyMonoIsEmpty_thenReturnWithNoBody() {
+        Mono<String> emptyBodyMono = Mono.empty();
+
+        StepVerifier.create(provider.createBodyMessage(emptyBodyMono))
+                .expectNext(wrapBody(NO_BODY_MESSAGE))
+                .verifyComplete();
+    }
 
     @Test
     void createBodyMessage_whenByteStreamNotEmpty_thenReturnWithBody() throws IOException {
